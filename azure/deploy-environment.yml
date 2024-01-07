@@ -1,0 +1,15 @@
+jobs:
+  - job: deployJob
+    variables:
+      - group: ${{ parameters.variables }}
+    steps:
+      - task: AzureStaticWebApp@0
+        inputs:
+          app_location: '/'
+          api_location: '/build/server'
+          output_location: '/build/static'
+          azure_static_web_apps_api_token: $(deployment_token)
+          deployment_environment: ${{ parameters.environment }}
+        env:
+          DISCORD_CLIENT_ID: $(DISCORD_CLIENT_ID)
+          DISCORD_CLIENT_SECRET: $(DISCORD_CLIENT_SECRET)

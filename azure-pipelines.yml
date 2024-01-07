@@ -1,0 +1,35 @@
+pr: none
+trigger:
+  - '*'
+
+variables:
+  isMain: ${{ eq(variables['Build.SourceBranch'], 'refs/heads/main') }}
+
+stages:
+  - stage: check
+    displayName: Check
+    jobs:
+      - job: check
+        steps:
+          - script: yarn install --frozen-lockfile
+            displayName: Install Dependencies
+          - script: yarn lint
+            displayName: Lint
+          - script: yarn check
+            displayName: Check
+  - ${{ if eq(variables.isMain, true) }}:
+      - stage: deployDev
+        displayName: Deploy Preview Build
+        dependsOn: check
+        jobs:
+          - template: azure/deploy-environment.yml
+            parameters:
+              variables: deploy-dev
+              environment: preview
+      - stage: deployProd
+        displayName: Deploy Production
+        dependsOn: deployDev
+        jobs:
+          - template: azure/deploy-environment.yml
+            parameters:
+              variables: deploy-prod
