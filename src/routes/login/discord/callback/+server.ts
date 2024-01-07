@@ -12,8 +12,7 @@ export const GET = async ({ url, cookies, locals }) => {
 		});
 	}
 	try {
-		const { getExistingUser, discordUser, createUser } =
-			await discordAuth.validateCallback(code);
+		const { getExistingUser, discordUser, createUser } = await discordAuth.validateCallback(code);
 		// console.log(discordUser);
 
 		const getUser = async () => {
