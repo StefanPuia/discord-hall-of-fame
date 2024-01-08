@@ -1,17 +1,12 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import type { PageData } from './$types';
-	export let data: PageData;
+	import { Anchor } from '@svelteuidev/core';
+	import ServerList from '$lib/components/Servers/ServerList.svelte';
+	import { userStore } from '$lib/stores';
 </script>
 
-{#if data.user}
-	<h1>Profile</h1>
-	<p>User id: {data.user.id}</p>
-	<p>GitHub username: {data.user.name}</p>
-	<form method="post" action="?/logout" use:enhance>
-		<input type="submit" value="Sign out" />
-	</form>
+{#if $userStore}
+	<ServerList />
 {:else}
 	<h1>Sign in</h1>
-	<a href="/login/discord">Sign in with Discord</a>
+	<Anchor href="/login/discord">Sign in with Discord</Anchor>
 {/if}

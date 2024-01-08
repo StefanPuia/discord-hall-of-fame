@@ -23,7 +23,28 @@ declare global {
 			username: string;
 			discriminator: string;
 		};
-		type DatabaseSessionAttributes = NonNullable<unknown>;
+		type DatabaseSessionAttributes = {
+			guilds: DiscordGuild[]
+		};
+	}
+
+	type DiscordGuild = {
+		id: string;
+		name: string;
+		icon: string;
+	}
+
+	type HofMessage = {
+		id: string;
+		title: string;
+		date: Date;
+		image: string;
+	}
+
+	type HofMessagePair = {
+		db: HofMessage,
+		discord?: HofMessage
+		// sync: boolean;
 	}
 }
 

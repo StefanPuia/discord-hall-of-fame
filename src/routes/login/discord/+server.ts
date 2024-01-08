@@ -1,5 +1,5 @@
 import { dev } from '$app/environment';
-import { discordAuth } from '$lib/server/lucia.js';
+import { discordAuth } from '$lib/server/lucia';
 
 export const GET = async ({ cookies }) => {
 	const [url, state] = await discordAuth.getAuthorizationUrl();

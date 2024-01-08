@@ -4,12 +4,11 @@ import { dev } from '$app/environment';
 import { unstorage } from '@lucia-auth/adapter-session-unstorage';
 import { createStorage } from 'unstorage';
 import { betterSqlite3 } from '@lucia-auth/adapter-sqlite';
-import sqlite from 'better-sqlite3';
 import { discord } from '@lucia-auth/oauth/providers';
 import { DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, HOSTNAME } from '$env/static/private';
+import { db } from '$lib/server/repository';
 
 const storage = createStorage();
-const db = sqlite('main.db');
 
 const userAdapter = betterSqlite3(db, {
 	user: 'user',
@@ -28,13 +27,19 @@ export const auth = lucia({
 		return {
 			discordUsername: data.username
 		};
+	},
+	getSessionAttributes: (data) => {
+		return {
+			guilds: data.guilds
+		}
 	}
 });
 
 export const discordAuth = discord(auth, {
 	clientId: DISCORD_CLIENT_ID,
 	clientSecret: DISCORD_CLIENT_SECRET,
-	redirectUri: `${HOSTNAME}/login/discord/callback`
+	redirectUri: `${HOSTNAME}/login/discord/callback`,
+	scope: ["identify", "guilds"]
 });
 
 export type Auth = typeof auth;

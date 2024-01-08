@@ -1,19 +1,6 @@
 import { auth } from '$lib/server/lucia';
 import { fail, redirect } from '@sveltejs/kit';
-import type { Actions, PageServerLoad } from './$types';
-
-export const load: PageServerLoad = async ({ locals }) => {
-	const session = await locals.auth.validate();
-	if (session) {
-		console.log(session);
-		return {
-			user: {
-				id: session.user.userId,
-				name: session.user.discordUsername
-			}
-		};
-	}
-};
+import type { Actions } from './$types';
 
 export const actions: Actions = {
 	logout: async ({ locals }) => {
