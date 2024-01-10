@@ -3,9 +3,18 @@
 	import Logo from './_Logo.svelte';
 	import { Anchor, Burger, Button, Group, Text } from '@svelteuidev/core';
 	import { userStore } from '$lib/stores';
+	import { page } from '$app/stores';
+	import GuildCard from '$lib/components/Guild/GuildCard.svelte';
 
 	export let opened: boolean;
 	export let toggleOpen: () => void;
+
+	let guild;
+
+	$: {
+		let serverId = $page.params.serverId;
+		guild = $userStore && $userStore.guilds.find(g => g.id === `${serverId}`);
+	}
 </script>
 
 <Group override={{ height: '100%', px: 20 }} position="apart">
@@ -20,6 +29,9 @@
 			<Text color="blue" size="xl" override={{ d: 'none', '@sm': { d: 'block' } }}>
 				Hall of Fame
 			</Text>
+			{#if $userStore}
+				<GuildCard {guild} />
+			{/if}
 		</Group>
 	</Anchor>
 	{#if $userStore}

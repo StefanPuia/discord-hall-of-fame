@@ -1,38 +1,34 @@
 import { getMessage as getDiscordMessage, getMessages as getDiscordMessages } from '$lib/server/discord-bot';
 import { getMessage as getDbMessage, getMessages as getDbMessages } from '$lib/server/repository';
-import { error } from '@sveltejs/kit';
+import type { HofMessage } from '$lib/types';
+import * as crypto from 'crypto';
 
-export const correlate = async (guildChannel: string, messageId: string): Promise<HofMessagePair> => {
+export const correlate = async (guildChannel: string, messageId: string): Promise<HofMessage> => {
 	const [discordMessage, dbMessage] = await Promise.allSettled([getDiscordMessage(guildChannel, messageId), getDbMessage(messageId)]);
 
-	if (dbMessage.status === 'rejected') {
-		throw error(500);
-	}
+	const discordMessageF = discordMessage.status === 'fulfilled' ? discordMessage.value : undefined;
+	const dbMessageF = dbMessage.status === 'fulfilled' ? dbMessage.value : undefined;
 
 	return {
-		db: dbMessage.value, discord: discordMessage.status === 'fulfilled' ? discordMessage.value : undefined
-		// sync: isSync(dbMessage, discordMessage)
+		databaseId: crypto.randomUUID(),
+		...dbMessageF,
+		...discordMessageF
 	};
 };
 
-export const correlateLists = async (guildChannel: string): Promise<HofMessagePair[]> => {
+export const correlateLists = async (guildChannel: string): Promise<HofMessage[]> => {
 	const [discordMessages, dbMessages] = await Promise.all([getDiscordMessages(guildChannel), getDbMessages(guildChannel)]);
 
-	const data: Record<string, HofMessagePair> = {};
-
-	for (const message of dbMessages) {
-		data[message.id] = {
-			db: message
-			// sync: false
-		};
-	}
+	const data: HofMessage[] = [...dbMessages];
 
 	for (const message of discordMessages) {
-		data[message.id].discord = message;
-		// data[message.id].sync = isSync(data[message.id].db, message);
+		const existing = data.find(m => m.discordMessageId === message.discordMessageId);
+		if (!existing) {
+			data.push(message);
+		}
 	}
 
-	return Object.values(data);
+	return data;
 };
 
 // const isSync = (dbMessage: HofMessage, discordMessage?: HofMessage) => {

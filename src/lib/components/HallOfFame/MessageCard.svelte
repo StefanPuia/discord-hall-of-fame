@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { Card, Group, Image, Text } from '@svelteuidev/core';
+	import { Badge, Card, Image, Text } from '@svelteuidev/core';
+	import type { HofMessage } from '$lib/types';
+	import { formatDate } from '$lib/display';
 
 	export let message: HofMessage;
 	export let height = 160;
@@ -8,7 +10,7 @@
 <Card shadow='sm' padding='lg'>
 	<Card.Section padding='lg'>
 		<Image
-			src='{message.image}'
+			src='{message.imageURL}'
 			height={height}
 			alt='{message.title}'
 		/>
@@ -16,10 +18,18 @@
 
 	<Text weight={500} pt="m" pb="m">{message.title}</Text>
 
-	<Group position='apart'>
-		<Text size='xs'>
-			{message.date}
-		</Text>
-		<slot name="badge" />
-	</Group>
+	<Text size='xs' mb="m">
+		{formatDate(message.date)}
+	</Text>
+
+	<!--{#if !message.discordMessageId}-->
+	<!--	<Badge color='orange' variant='filled'>-->
+	<!--		Message missing-->
+	<!--	</Badge>-->
+	<!--{/if}-->
+	<!--{#if !message.blobImage}-->
+	<!--	<Badge color='red' variant='filled'>-->
+	<!--		Backup Missing-->
+	<!--	</Badge>-->
+	<!--{/if}-->
 </Card>

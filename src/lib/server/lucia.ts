@@ -1,4 +1,4 @@
-import { lucia } from 'lucia';
+import { AuthRequest, lucia } from 'lucia';
 import { sveltekit } from 'lucia/middleware';
 import { dev } from '$app/environment';
 import { unstorage } from '@lucia-auth/adapter-session-unstorage';
@@ -7,6 +7,7 @@ import { betterSqlite3 } from '@lucia-auth/adapter-sqlite';
 import { discord } from '@lucia-auth/oauth/providers';
 import { DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, HOSTNAME } from '$env/static/private';
 import { db } from '$lib/server/repository';
+import { redirect } from '@sveltejs/kit';
 
 const storage = createStorage();
 
@@ -31,15 +32,22 @@ export const auth = lucia({
 	getSessionAttributes: (data) => {
 		return {
 			guilds: data.guilds
-		}
+		};
 	}
 });
+
+export const requireAuth = async (auth: AuthRequest) => {
+	const session = await auth.validate();
+	if (!session) {
+		throw redirect(302, '/');
+	}
+};
 
 export const discordAuth = discord(auth, {
 	clientId: DISCORD_CLIENT_ID,
 	clientSecret: DISCORD_CLIENT_SECRET,
 	redirectUri: `${HOSTNAME}/login/discord/callback`,
-	scope: ["identify", "guilds"]
+	scope: ['identify', 'guilds']
 });
 
 export type Auth = typeof auth;

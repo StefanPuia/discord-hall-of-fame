@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { Anchor, Grid } from '@svelteuidev/core';
 	import SkeletonCard from '$lib/components/HallOfFame/SkeletonCard.svelte';
-	import CombinedCard from '$lib/components/HallOfFame/CombinedCard.svelte';
+	import type { HofMessage } from '$lib/types';
+	import MessageCard from '$lib/components/HallOfFame/MessageCard.svelte';
 
 	export let serverId: string;
-	export let messages: HofMessagePair[];
+	export let messages: HofMessage[];
 </script>
 
 <Grid spacing={20}>
@@ -13,10 +14,10 @@
 			<SkeletonCard />
 		</Anchor>
 	</Grid.Col>
-	{#each messages as messagePair}
+	{#each messages as message}
 		<Grid.Col span={4}>
-			<Anchor href={`/${serverId}/${messagePair.db.id}`}>
-				<CombinedCard message={messagePair} />
+			<Anchor href={`/${serverId}/${message.databaseId}`}>
+				<MessageCard {message} />
 			</Anchor>
 		</Grid.Col>
 	{/each}

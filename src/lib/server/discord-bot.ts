@@ -1,6 +1,10 @@
 import { REST, Routes } from 'discord.js';
-import { DISCORD_BOT_TOKEN } from '$env/static/private';
+import { DISCORD_BOT_TOKEN, DISCORD_BOT_ID } from '$env/static/private';
 import { discordGuildMapper } from '$lib/mappers';
+import dayjs from 'dayjs';
+import type { DiscordGuild, HofMessage } from '$lib/types';
+import { formatDate } from '$lib/display';
+
 
 const cache: {
 	botGuilds: DiscordGuild[] | null
@@ -25,12 +29,54 @@ export const getMessage = async (channelId: string, messageId: string): Promise<
 
 export const getMessages = async (channelId: string): Promise<HofMessage[]> => {
 	const messages = await rest.get(Routes.channelMessages(channelId)) as Record<string, any>[];
-	return messages.map(mapMessage);
+	return messages.filter(m => m.author.id === DISCORD_BOT_ID).map(mapMessage);
 };
 
-const mapMessage = (message: any) => ({
-	id: message.id,
-	title: message.embeds[0].title,
-	date: message.embeds[0].footer.text,
-	image: message.embeds[0].image.url
-});
+export const postMessage = async (channelId: string, message: HofMessage, image: Buffer): Promise<HofMessage> => {
+	const discordMessage = await rest.post(Routes.channelMessages(channelId), {
+		files: [{
+			data: image,
+			name: 'image.jpg'
+		}],
+		body: {
+			content: `**${message.title}**\n*${formatDate(message.date)}*`
+		}
+	});
+	return {
+		...message,
+		discordMessageId: discordMessage.id
+	};
+};
+
+export const updateMessage = async (channelId: string, messageId: string, message: HofMessage, imageBuffer?: Buffer) => {
+	let image = imageBuffer;
+	if (!image) {
+		image = await (await fetch(message.imageURL)).arrayBuffer() as Buffer;
+	}
+	await rest.patch(Routes.channelMessage(channelId, messageId), {
+		files: [{
+			data: image as Buffer,
+			name: 'image.jpg'
+		}],
+		body: {
+			content: `**${message.title}**\n*${formatDate(message.date)}*`,
+			embeds: []
+		}
+	});
+};
+
+export const deleteMessage = async (channelId: string, messageId: string) => {
+	await rest.delete(Routes.channelMessage(channelId, messageId));
+}
+
+const mapMessage = (message: any): HofMessage => {
+	const { title, date } = message.content.match(/\*\*(?<title>.+?)\*\*\n\*(?<date>.+?)\*/).groups;
+	return {
+		databaseId: message.id,
+		discordMessageId: message.id,
+		title,
+		date: dayjs(date).toDate(),
+		imageURL: message.attachments[0].url
+	};
+};
+
