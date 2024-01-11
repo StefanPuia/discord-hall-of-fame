@@ -1,4 +1,5 @@
-import { AuthRequest, lucia } from 'lucia';
+import type { AuthRequest } from 'lucia';
+import { lucia } from 'lucia';
 import { sveltekit } from 'lucia/middleware';
 import { dev } from '$app/environment';
 import { unstorage } from '@lucia-auth/adapter-session-unstorage';

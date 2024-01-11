@@ -2,7 +2,8 @@ export type DiscordGuild = {
 	id: string;
 	name: string;
 	icon: string;
-}
+	permissions: bigint;
+};
 
 export type HofMessage = {
 	databaseId: string;
@@ -11,4 +12,4 @@ export type HofMessage = {
 	date: Date;
 	blobImage?: string;
 	imageURL: string;
-}
+};

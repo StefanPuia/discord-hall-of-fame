@@ -1,9 +1,10 @@
 import { auth, discordAuth } from '$lib/server/lucia.js';
 import { OAuthRequestError } from '@lucia-auth/oauth';
 import { error } from '@sveltejs/kit';
-import { REST, Routes } from 'discord.js';
-import { discordGuildMapper } from '$lib/mappers';
+import { PermissionsBitField, REST, Routes } from 'discord.js';
 import { getBotGuilds } from '$lib/server/discord-bot';
+import type { DiscordGuild } from '$lib/types';
+import { discordGuildMapper } from '$lib/mappers';
 
 export const GET = async ({ url, cookies, locals }) => {
 	const storedState = cookies.get('discord_oauth_state');
@@ -33,14 +34,20 @@ export const GET = async ({ url, cookies, locals }) => {
 		};
 
 		const rest = new REST({ authPrefix: 'Bearer' }).setToken(accessToken);
-		const guilds = await rest.get(Routes.userGuilds()) as DiscordGuild[];
+		const guilds = (await rest.get(Routes.userGuilds())) as DiscordGuild[];
 		const botGuilds = await getBotGuilds();
+		const commonGuilds = guilds
+			.filter(isAdministrator)
+			.filter(isBotAlsoInGuild(botGuilds))
+			.map(discordGuildMapper);
+
+		console.log();
 
 		const user = await getUser();
 		const session = await auth.createSession({
 			userId: user.userId,
 			attributes: {
-				guilds: guilds.map(discordGuildMapper).filter(g => botGuilds.find(bg => bg.id === g.id))
+				guilds: commonGuilds
 			}
 		});
 		locals.auth.setSession(session);
@@ -58,3 +65,8 @@ export const GET = async ({ url, cookies, locals }) => {
 		throw error(500);
 	}
 };
+
+const isBotAlsoInGuild = (botGuilds: DiscordGuild[]) => (guild: DiscordGuild) =>
+	!!botGuilds.find((bg) => bg.id === guild.id);
+const isAdministrator = (guild: DiscordGuild) =>
+	new PermissionsBitField(guild.permissions).has(PermissionsBitField.Flags.Administrator);

@@ -21,15 +21,20 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const existing = await correlate(getGuildChannel(serverId), postId);
 		const image = formData.get('image') as File;
-		const imageBuffer = image.size ? await image.arrayBuffer() as Buffer : undefined;
+		const imageBuffer = image.size ? ((await image.arrayBuffer()) as Buffer) : undefined;
 
-		await updateMessage(getGuildChannel(serverId), postId, {
-			title: formData.get('title') as string || existing.title,
-			date: dayjs(formData.get('date') as string).toDate() || existing.date,
-			imageURL: existing.imageURL,
-			discordMessageId: postId,
-			databaseId: postId
-		}, imageBuffer);
+		await updateMessage(
+			getGuildChannel(serverId),
+			postId,
+			{
+				title: (formData.get('title') as string) || existing.title,
+				date: dayjs(formData.get('date') as string).toDate() || existing.date,
+				imageURL: existing.imageURL,
+				discordMessageId: postId,
+				databaseId: postId
+			},
+			imageBuffer
+		);
 
 		return redirect(302, `/${serverId}`);
 	},

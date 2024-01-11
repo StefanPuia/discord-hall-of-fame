@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Anchor } from '@svelteuidev/core';
+	import { Anchor, Box } from '@svelteuidev/core';
 	import ServerList from '$lib/components/Servers/ServerList.svelte';
 	import { userStore } from '$lib/stores';
 </script>
@@ -8,5 +8,7 @@
 	<ServerList />
 {:else}
 	<h1>Sign in</h1>
-	<Anchor href="/login/discord">Sign in with Discord</Anchor>
+	<Box mt="md">
+		<Anchor href="/login/discord">Sign in with Discord</Anchor>
+	</Box>
 {/if}

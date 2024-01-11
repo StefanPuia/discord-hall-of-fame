@@ -25,7 +25,7 @@ declare global {
 			discriminator: string;
 		};
 		type DatabaseSessionAttributes = {
-			guilds: DiscordGuild[]
+			guilds: DiscordGuild[];
 		};
 	}
 }

@@ -11,19 +11,23 @@ export const actions: Actions = {
 
 		const formData = await request.formData();
 		const image = formData.get('image') as File;
-		const imageBuffer = image.size ? await image.arrayBuffer() as Buffer : undefined;
+		const imageBuffer = image.size ? ((await image.arrayBuffer()) as Buffer) : undefined;
 
 		if (!imageBuffer) {
 			throw error(400);
 		}
 
-		await postMessage(getGuildChannel(serverId), {
-			title: formData.get('title') as string,
-			date: dayjs(formData.get('date') as string).toDate(),
-			imageURL: '',
-			discordMessageId: '',
-			databaseId: ''
-		}, imageBuffer);
+		await postMessage(
+			getGuildChannel(serverId),
+			{
+				title: formData.get('title') as string,
+				date: dayjs(formData.get('date') as string).toDate(),
+				imageURL: '',
+				discordMessageId: '',
+				databaseId: ''
+			},
+			imageBuffer
+		);
 
 		return redirect(302, `/${serverId}`);
 	}

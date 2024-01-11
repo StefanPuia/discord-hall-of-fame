@@ -5,15 +5,16 @@
 	import { userStore } from '$lib/stores';
 	import { page } from '$app/stores';
 	import GuildCard from '$lib/components/Guild/GuildCard.svelte';
+	import type { DiscordGuild } from '$lib/types';
 
 	export let opened: boolean;
 	export let toggleOpen: () => void;
 
-	let guild;
+	let guild: DiscordGuild;
 
 	$: {
 		let serverId = $page.params.serverId;
-		guild = $userStore && $userStore.guilds.find(g => g.id === `${serverId}`);
+		guild = $userStore && $userStore.guilds.find((g) => g.id === `${serverId}`);
 	}
 </script>
 
@@ -36,7 +37,7 @@
 	</Anchor>
 	{#if $userStore}
 		<Group>
-			<form method="post" action="/?/logout" use:enhance on:submit={() => $userStore = null}>
+			<form method="post" action="/?/logout" use:enhance on:submit={() => ($userStore = null)}>
 				<Button type="submit">Sign out</Button>
 			</form>
 		</Group>

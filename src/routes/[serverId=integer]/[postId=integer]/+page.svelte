@@ -9,7 +9,6 @@
 	export let data: PageData;
 </script>
 
-
 {#await data.message}
 	<SkeletonCard />
 {:then message}
@@ -48,7 +47,6 @@
 						</form>
 					{/if}
 				</Flex>
-
 			</Stack>
 		</form>
 	</Stack>

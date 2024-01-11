@@ -9,6 +9,7 @@
 
 {#await data.messages}
 	<Grid spacing={20}>
+		<!-- eslint-disable-next-line @typescript-eslint/no-unused-vars-->
 		{#each { length: 5 } as _}
 			<Grid.Col span={4}>
 				<SkeletonCard />

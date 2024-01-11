@@ -4,16 +4,10 @@
 	import { formatDate } from '$lib/display';
 </script>
 
-
 <Stack>
 	<form action="?/create" method="post" enctype="multipart/form-data" use:enhance>
 		<Stack>
-			<TextInput
-				placeholder="e.g. Mythic The Lich King"
-				label="Title"
-				name="title"
-				required
-			/>
+			<TextInput placeholder="e.g. Mythic The Lich King" label="Title" name="title" required />
 
 			<TextInput
 				placeholder="e.g. 12 June 2000"
