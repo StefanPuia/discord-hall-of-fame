@@ -5,7 +5,7 @@ import { dev } from '$app/environment';
 import { unstorage } from '@lucia-auth/adapter-session-unstorage';
 import { createStorage } from 'unstorage';
 import { discord } from '@lucia-auth/oauth/providers';
-import { DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, HOSTNAME } from '$env/static/private';
+import { DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, BASE_URL } from '$env/static/private';
 import { redirect } from '@sveltejs/kit';
 
 const userStorage = createStorage();
@@ -49,7 +49,7 @@ export const requireAuth = async (auth: AuthRequest) => {
 export const discordAuth = discord(auth, {
 	clientId: DISCORD_CLIENT_ID,
 	clientSecret: DISCORD_CLIENT_SECRET,
-	redirectUri: `${HOSTNAME}/login/discord/callback`,
+	redirectUri: `${BASE_URL}/login/discord/callback`,
 	scope: ['identify', 'guilds']
 });
 
