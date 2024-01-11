@@ -11,5 +11,5 @@ jobs:
           azure_static_web_apps_api_token: $(deployment_token)
           deployment_environment: ${{ parameters.environment }}
         env:
-          DISCORD_CLIENT_ID: $(DISCORD_CLIENT_ID)
           DISCORD_CLIENT_SECRET: $(DISCORD_CLIENT_SECRET)
+          DISCORD_BOT_TOKEN: $(DISCORD_BOT_TOKEN)
