@@ -18,7 +18,7 @@
 		<form action="?/save" method="post" enctype="multipart/form-data" use:enhance>
 			<Stack>
 				<TextInput
-					placeholder="e.g. Mythic The Lich King"
+					placeholder="Mythic: The Lich King"
 					label="Title"
 					name="title"
 					value={message.title}
@@ -42,7 +42,15 @@
 							<Button type="submit">Push to Discord</Button>
 						</form>
 					{:else}
-						<form action="?/delete" method="post" use:enhance>
+						<form
+							action="?/delete"
+							method="post"
+							use:enhance={({ cancel }) => {
+								if (!confirm('Are you sure you want to delete this post?')) {
+									return cancel();
+								}
+							}}
+						>
 							<Button type="submit" color="red">Delete</Button>
 						</form>
 					{/if}

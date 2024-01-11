@@ -2,20 +2,16 @@
 	import { Button, Input, InputWrapper, Stack, TextInput } from '@svelteuidev/core';
 	import { enhance } from '$app/forms';
 	import { formatDate } from '$lib/display';
+
+	const today = formatDate(new Date());
 </script>
 
 <Stack>
 	<form action="?/create" method="post" enctype="multipart/form-data" use:enhance>
 		<Stack>
-			<TextInput placeholder="e.g. Mythic The Lich King" label="Title" name="title" required />
+			<TextInput placeholder="Mythic: The Lich King" label="Title" name="title" required />
 
-			<TextInput
-				placeholder="e.g. 12 June 2000"
-				label="Date"
-				name="date"
-				required
-				value={formatDate(new Date())}
-			/>
+			<TextInput placeholder={today} label="Date" name="date" required value={today} />
 
 			<InputWrapper label="Image" required>
 				<Input type="file" required name="image" />
