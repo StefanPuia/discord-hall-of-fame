@@ -4,27 +4,29 @@ import { sveltekit } from 'lucia/middleware';
 import { dev } from '$app/environment';
 import { unstorage } from '@lucia-auth/adapter-session-unstorage';
 import { createStorage } from 'unstorage';
-import { betterSqlite3 } from '@lucia-auth/adapter-sqlite';
 import { discord } from '@lucia-auth/oauth/providers';
 import { DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, HOSTNAME } from '$env/static/private';
-import { db } from '$lib/server/repository';
 import { redirect } from '@sveltejs/kit';
 
-const storage = createStorage();
-
-const userAdapter = betterSqlite3(db, {
-	user: 'user',
-	key: 'user_key',
-	session: 'user_session'
-});
+const userStorage = createStorage();
+const sessionStorage = createStorage();
 
 export const auth = lucia({
 	env: dev ? 'DEV' : 'PROD',
 	middleware: sveltekit(),
-	adapter: {
-		user: userAdapter, // any normal adapter for storing users/keys
-		session: unstorage(storage)
-	},
+	adapter: (params) => ({
+		...unstorage(sessionStorage)(params),
+		getUser: (userId) => userStorage.getItem(`user:${userId}`),
+		setUser: (user) => userStorage.setItem(`user:${user.id}`, user),
+		updateUser: () => Promise.reject('noop updateUser'),
+		deleteUser: () => Promise.reject('noop deleteUser'),
+		getKey: (keyId) => userStorage.getItem(`key:${keyId}`),
+		getKeysByUserId: () => Promise.reject('noop getKeysByUserId'),
+		setKey: () => Promise.reject('noop setKey'),
+		updateKey: () => Promise.reject('noop updateKey'),
+		deleteKey: () => Promise.reject('noop deleteKey'),
+		deleteKeysByUserId: () => Promise.reject('noop deleteKeysByUserId')
+	}),
 	getUserAttributes: (data) => {
 		return {
 			discordUsername: data.username
