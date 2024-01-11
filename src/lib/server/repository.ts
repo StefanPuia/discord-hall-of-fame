@@ -36,7 +36,7 @@ db.exec(`
         idle_expires   INTEGER not null,
         user           TEXT
     );
-`)
+`);
 
 export const getGuildChannel = (guildId: string) => {
 	const channel = SERVER_CHANNEL_CONFIG[guildId];
