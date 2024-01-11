@@ -3,6 +3,7 @@ trigger:
   - '*'
 
 variables:
+  isDev: ${{ eq(variables['Build.SourceBranch'], 'refs/heads/dev') }}
   isMain: ${{ eq(variables['Build.SourceBranch'], 'refs/heads/main') }}
 
 stages:
@@ -17,7 +18,7 @@ stages:
             displayName: Lint
           - script: yarn check
             displayName: Check
-  - ${{ if eq(variables.isMain, true) }}:
+  - ${{ if or(eq(variables.isDev, true), eq(variables.isMain, true)) }}:
       - stage: deployDev
         displayName: Deploy Preview Build
         dependsOn: check
@@ -26,6 +27,7 @@ stages:
             parameters:
               variables: deploy-dev
               environment: preview
+  - ${{ if eq(variables.isMain, true) }}:
       - stage: deployProd
         displayName: Deploy Production
         dependsOn: deployDev
