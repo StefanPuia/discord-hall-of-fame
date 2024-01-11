@@ -8,6 +8,36 @@ const SERVER_CHANNEL_CONFIG: Record<string, string> = {
 };
 export const db = sqlite('main.db');
 
+db.exec(`
+    create table if not exists user
+    (
+        id            TEXT not null
+            primary key,
+        username      TEXT not null,
+        discriminator integer TEXT
+    );
+
+    create table if not exists user_key
+    (
+        id              TEXT not null
+            primary key,
+        user_id         TEXT not null
+            references user,
+        hashed_password TEXT
+    );
+
+    create table if not exists user_session
+    (
+        id             TEXT    not null
+            primary key,
+        user_id        TEXT    not null
+            references user,
+        active_expires INTEGER not null,
+        idle_expires   INTEGER not null,
+        user           TEXT
+    );
+`)
+
 export const getGuildChannel = (guildId: string) => {
 	const channel = SERVER_CHANNEL_CONFIG[guildId];
 	if (!channel) {
