@@ -10,7 +10,7 @@
 	export let opened: boolean;
 	export let toggleOpen: () => void;
 
-	let guild: DiscordGuild;
+	let guild: DiscordGuild | null | undefined;
 
 	$: {
 		let serverId = $page.params.serverId;
@@ -30,7 +30,7 @@
 			<Text color="blue" size="xl" override={{ d: 'none', '@sm': { d: 'block' } }}>
 				Hall of Fame
 			</Text>
-			{#if $userStore}
+			{#if guild}
 				<GuildCard {guild} />
 			{/if}
 		</Group>

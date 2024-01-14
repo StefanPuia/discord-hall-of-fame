@@ -26,7 +26,9 @@ export const GET = async ({ url, cookies, locals }) => {
 			if (existingUser) return existingUser;
 			return await createUser({
 				userId: discordUser.id,
-				attributes: {}
+				attributes: {
+					isEditor: false
+				}
 			});
 		};
 

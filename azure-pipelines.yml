@@ -16,7 +16,7 @@ stages:
             displayName: Install Dependencies
           - script: yarn lint
             displayName: Lint
-          - script: yarn check
+          - script: yarn run check
             displayName: Check
   - ${{ if or(eq(variables.isDev, true), eq(variables.isMain, true)) }}:
       - stage: deployDev
