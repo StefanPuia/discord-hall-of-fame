@@ -1,0 +1,70 @@
+{
+	"$schema": "https://github.com/Azure/data-api-builder/releases/latest/download/dab.draft.schema.json",
+	"data-source": {
+		"database-type": "mysql",
+		"connection-string": "@env('DATABASE_CONNECTION_STRING')"
+	},
+	"runtime": {
+		"rest": {
+			"enabled": true,
+			"path": "/rest"
+		},
+		"host": {
+			"mode": "development",
+			"cors": {
+				"origins": ["http://localhost:4280", "http://localhost:5173"],
+				"allow-credentials": false
+			},
+			"authentication": {
+				"provider": "StaticWebApps"
+			}
+		}
+	},
+	"entities": {
+		"user": {
+			"source": "user",
+			"permissions": [
+				{
+					"actions": ["read", "create"],
+					"role": "anonymous"
+				}
+			]
+		},
+		"server": {
+			"source": "server",
+			"permissions": [
+				{
+					"actions": ["read"],
+					"role": "anonymous"
+				}
+			]
+		},
+		"post": {
+			"source": "post",
+			"permissions": [
+				{
+					"actions": ["read", "create", "update"],
+					"role": "anonymous"
+				}
+			]
+		},
+		"user_key": {
+			"source": "user_key",
+			"permissions": [
+				{
+					"actions": ["*"],
+					"role": "anonymous"
+				}
+			]
+		},
+		"user_session": {
+			"source": "user_session",
+			"permissions": [
+				{
+					"actions": ["*"],
+					"role": "anonymous"
+				}
+			]
+		}
+	}
+}

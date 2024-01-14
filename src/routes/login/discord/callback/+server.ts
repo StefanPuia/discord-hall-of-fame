@@ -16,20 +16,17 @@ export const GET = async ({ url, cookies, locals }) => {
 	}
 	try {
 		const {
-			getExistingUser,
 			discordUser,
 			createUser,
 			discordTokens: { accessToken }
 		} = await discordAuth.validateCallback(code);
 
 		const getUser = async () => {
-			const existingUser = await getExistingUser();
+			const existingUser = await auth.getUser(discordUser.id);
 			if (existingUser) return existingUser;
 			return await createUser({
-				attributes: {
-					username: discordUser.username,
-					discriminator: discordUser.discriminator
-				}
+				userId: discordUser.id,
+				attributes: {}
 			});
 		};
 

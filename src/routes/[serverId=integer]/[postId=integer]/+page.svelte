@@ -36,12 +36,12 @@
 				</InputWrapper>
 
 				<Flex gap="md">
-					<Button type="submit" color="green">Save</Button>
-					{#if !message.discordMessageId}
+					{#if !message.exists}
 						<form action="?/post" method="post" use:enhance>
 							<Button type="submit">Push to Discord</Button>
 						</form>
 					{:else}
+						<Button type="submit" color="green">Save</Button>
 						<form
 							action="?/delete"
 							method="post"
@@ -51,8 +51,13 @@
 								}
 							}}
 						>
-							<Button type="submit" color="red">Delete</Button>
+							<Button type="submit" color="red">Delete from Discord</Button>
 						</form>
+						{#if !message.blobImage}
+							<form action="?/backup" method="post" use:enhance>
+								<Button type="submit">Backup message</Button>
+							</form>
+						{/if}
 					{/if}
 				</Flex>
 			</Stack>

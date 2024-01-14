@@ -6,7 +6,6 @@ export const load: LayoutServerLoad = async ({ locals }) => {
 		return {
 			user: {
 				id: session.user.userId,
-				name: session.user.discordUsername,
 				guilds: session.guilds
 			}
 		};

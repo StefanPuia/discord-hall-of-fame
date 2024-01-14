@@ -2,35 +2,17 @@ import type { AuthRequest } from 'lucia';
 import { lucia } from 'lucia';
 import { sveltekit } from 'lucia/middleware';
 import { dev } from '$app/environment';
-import { unstorage } from '@lucia-auth/adapter-session-unstorage';
-import { createStorage } from 'unstorage';
 import { discord } from '@lucia-auth/oauth/providers';
-import { DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, BASE_URL } from '$env/static/private';
+import { BASE_URL, DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET } from '$env/static/private';
 import { redirect } from '@sveltejs/kit';
-
-const userStorage = createStorage();
-const sessionStorage = createStorage();
+import { swaAdapter } from '$lib/server/lucia-swa-db-adapter';
 
 export const auth = lucia({
 	env: dev ? 'DEV' : 'PROD',
 	middleware: sveltekit(),
-	adapter: (params) => ({
-		...unstorage(sessionStorage)(params),
-		getUser: (userId) => userStorage.getItem(`user:${userId}`),
-		setUser: (user) => userStorage.setItem(`user:${user.id}`, user),
-		updateUser: () => Promise.reject('noop updateUser'),
-		deleteUser: () => Promise.reject('noop deleteUser'),
-		getKey: (keyId) => userStorage.getItem(`key:${keyId}`),
-		getKeysByUserId: () => Promise.reject('noop getKeysByUserId'),
-		setKey: () => Promise.reject('noop setKey'),
-		updateKey: () => Promise.reject('noop updateKey'),
-		deleteKey: () => Promise.reject('noop deleteKey'),
-		deleteKeysByUserId: () => Promise.reject('noop deleteKeysByUserId')
-	}),
-	getUserAttributes: (data) => {
-		return {
-			discordUsername: data.username
-		};
+	adapter: swaAdapter,
+	getUserAttributes: () => {
+		return {};
 	},
 	getSessionAttributes: (data) => {
 		return {

@@ -16,7 +16,7 @@
 	</Grid.Col>
 	{#each messages as message}
 		<Grid.Col span={4}>
-			<Anchor href={`/${serverId}/${message.databaseId}`}>
+			<Anchor href={`/${serverId}/${message.discordId}`}>
 				<MessageCard {message} />
 			</Anchor>
 		</Grid.Col>

@@ -6,10 +6,10 @@ export type DiscordGuild = {
 };
 
 export type HofMessage = {
-	databaseId: string;
-	discordMessageId?: string;
+	discordId: string;
 	title: string;
 	date: Date;
 	blobImage?: string;
 	imageURL: string;
+	exists?: boolean;
 };

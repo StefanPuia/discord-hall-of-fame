@@ -4,6 +4,7 @@ import { postMessage } from '$lib/server/discord-bot';
 import dayjs from 'dayjs';
 import { error, redirect } from '@sveltejs/kit';
 import { requireAuth } from '$lib/server/lucia';
+import { backupMessage } from '$lib/server/backup';
 
 export const actions: Actions = {
 	create: async ({ params: { serverId }, locals, request }) => {
@@ -17,18 +18,20 @@ export const actions: Actions = {
 			throw error(400);
 		}
 
-		await postMessage(
-			getGuildChannel(serverId),
+		const channelId = await getGuildChannel(serverId);
+		const message = await postMessage(
+			channelId,
 			{
 				title: formData.get('title') as string,
 				date: dayjs(formData.get('date') as string).toDate(),
 				imageURL: '',
-				discordMessageId: '',
-				databaseId: ''
+				discordId: ''
 			},
 			imageBuffer
 		);
 
-		return redirect(302, `/${serverId}`);
+		backupMessage(channelId, message, imageBuffer).catch(console.error);
+
+		return redirect(302, `/${serverId}/${message.discordId}`);
 	}
 };

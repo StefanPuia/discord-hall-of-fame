@@ -1,24 +1,21 @@
-import type { HofMessage } from '$lib/types';
 import { error } from '@sveltejs/kit';
+import { getPostByDiscordId, getPostsByChannel, getServer, type Post } from '$lib/server/database';
 
-const SERVER_CHANNEL_CONFIG: Record<string, string> = {
-	'505030650651475991': '684134210306572309',
-	'692374848378241065': '1194412606090391643'
-};
-
-export const getGuildChannel = (guildId: string) => {
-	const channel = SERVER_CHANNEL_CONFIG[guildId];
-	if (!channel) {
-		throw error(501, 'server not configured');
+export const getGuildChannel = async (guildId: string) => {
+	const channel = await getServer(guildId);
+	if (!channel.data) {
+		throw error(404, 'server not configured');
 	}
-	return channel;
+	return channel.data[0].hofChannelId;
 };
 
-export const getMessage = async (databaseId: string): Promise<HofMessage> => {
-	return (await getMessages('')).find((m) => m.databaseId === databaseId)!;
+export const getMessage = async (discordId: string): Promise<Post> => {
+	const post = await getPostByDiscordId(discordId);
+	return post.data?.[0];
 };
 
-export const getMessages = async (channelId: string): Promise<HofMessage[]> => {
+export const getMessages = async (channelId: string): Promise<Post[]> => {
 	if (!channelId) throw new Error();
-	return [];
+	const posts = await getPostsByChannel(channelId);
+	return posts.data;
 };

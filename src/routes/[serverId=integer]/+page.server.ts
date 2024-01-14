@@ -5,7 +5,7 @@ import { requireAuth } from '$lib/server/lucia';
 
 export const load: PageServerLoad = async ({ params: { serverId }, locals }) => {
 	await requireAuth(locals.auth);
-	const guildChannel = getGuildChannel(serverId);
+	const guildChannel = await getGuildChannel(serverId);
 	return {
 		messages: correlateLists(guildChannel)
 	};

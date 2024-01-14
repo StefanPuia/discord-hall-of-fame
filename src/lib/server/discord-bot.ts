@@ -49,7 +49,8 @@ export const postMessage = async (
 	})) as Message;
 	return {
 		...message,
-		discordMessageId: discordMessage.id
+		exists: true,
+		discordId: discordMessage.id
 	};
 };
 
@@ -85,10 +86,10 @@ const mapMessage = (message: Message): HofMessage => {
 	const { title, date } =
 		message?.content.match(/\*\*(?<title>.+?)\*\*\n\*(?<date>.+?)\*/)?.groups ?? {};
 	return {
-		databaseId: message.id,
-		discordMessageId: message.id,
+		discordId: message.id,
 		title,
 		date: dayjs(date).toDate(),
-		imageURL: (message.attachments as unknown as Attachment[])[0].url
+		imageURL: (message.attachments as unknown as Attachment[])[0].url,
+		exists: true
 	};
 };

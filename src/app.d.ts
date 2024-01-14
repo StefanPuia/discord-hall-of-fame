@@ -20,10 +20,7 @@ declare global {
 
 	namespace Lucia {
 		type Auth = import('$lib/server/lucia').Auth;
-		type DatabaseUserAttributes = {
-			username: string;
-			discriminator: string;
-		};
+		type DatabaseUserAttributes = Record<string, string>;
 		type DatabaseSessionAttributes = {
 			guilds: DiscordGuild[];
 		};

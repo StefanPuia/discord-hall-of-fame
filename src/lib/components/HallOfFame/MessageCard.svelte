@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Card, Image, Text } from '@svelteuidev/core';
+	import { Badge, Card, Image, Text } from '@svelteuidev/core';
 	import type { HofMessage } from '$lib/types';
 	import { formatDate } from '$lib/display';
 
@@ -18,14 +18,10 @@
 		{formatDate(message.date)}
 	</Text>
 
-	<!--{#if !message.discordMessageId}-->
-	<!--	<Badge color='orange' variant='filled'>-->
-	<!--		Message missing-->
-	<!--	</Badge>-->
-	<!--{/if}-->
-	<!--{#if !message.blobImage}-->
-	<!--	<Badge color='red' variant='filled'>-->
-	<!--		Backup Missing-->
-	<!--	</Badge>-->
-	<!--{/if}-->
+	{#if !message.exists}
+		<Badge color="orange" variant="filled">Message missing</Badge>
+	{/if}
+	{#if !message.blobImage}
+		<Badge color="red" variant="filled">Backup Missing</Badge>
+	{/if}
 </Card>
