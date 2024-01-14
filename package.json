@@ -16,7 +16,6 @@
 	},
 	"devDependencies": {
 		"@lucia-auth/adapter-session-unstorage": "^2.1.0",
-		"@lucia-auth/adapter-sqlite": "^2.0.1",
 		"@lucia-auth/oauth": "^3.5.1",
 		"@playwright/test": "^1.28.1",
 		"@sveltejs/adapter-auto": "^3.0.0",
@@ -29,7 +28,6 @@
 		"@types/eslint": "8.56.0",
 		"@typescript-eslint/eslint-plugin": "^6.0.0",
 		"@typescript-eslint/parser": "^6.0.0",
-		"better-sqlite3": "^9.2.2",
 		"dayjs": "^1.11.10",
 		"discord.js": "^14.14.1",
 		"eslint": "^8.56.0",

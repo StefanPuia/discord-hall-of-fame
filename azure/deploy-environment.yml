@@ -3,9 +3,6 @@ jobs:
     variables:
       - group: ${{ parameters.variables }}
     steps:
-      - script: |
-          yarn config set ignore-engines true
-        displayName: Ignore yarn engines
       - task: AzureStaticWebApp@0
         inputs:
           app_location: '/'
