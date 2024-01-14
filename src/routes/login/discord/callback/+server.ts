@@ -22,8 +22,12 @@ export const GET = async ({ url, cookies, locals }) => {
 		} = await discordAuth.validateCallback(code);
 
 		const getUser = async () => {
-			const existingUser = await auth.getUser(discordUser.id);
-			if (existingUser) return existingUser;
+			try {
+				const existingUser = await auth.getUser(discordUser.id);
+				if (existingUser) return existingUser;
+			} catch (err) {
+				console.log(err);
+			}
 			return await createUser({
 				userId: discordUser.id,
 				attributes: {
@@ -39,8 +43,6 @@ export const GET = async ({ url, cookies, locals }) => {
 			.filter(isAdministrator)
 			.filter(isBotAlsoInGuild(botGuilds))
 			.map(discordGuildMapper);
-
-		console.log();
 
 		const user = await getUser();
 		const session = await auth.createSession({
