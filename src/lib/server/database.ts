@@ -2,13 +2,11 @@ import axios from 'axios';
 import { isMockEnabled } from '$lib';
 import MockAdapter from 'axios-mock-adapter';
 import { dev } from '$app/environment';
-import fetchAdapter from '@haverstack/axios-fetch-adapter';
 import { mockRoutes } from '../../mocks/mock.routes';
 import { BASE_URL } from '$env/static/private';
 
 export const service = axios.create({
-	baseURL: dev ? 'http://127.0.0.1:4280/data-api/rest' : `${BASE_URL}/data-api/rest`,
-	...(dev ? {} : { adapter: fetchAdapter })
+	baseURL: dev ? 'http://127.0.0.1:4280/data-api/rest' : `${BASE_URL}/data-api/rest`
 });
 
 service.interceptors.response.use((response) => {
