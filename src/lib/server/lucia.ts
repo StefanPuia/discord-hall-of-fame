@@ -29,7 +29,7 @@ export const requireAuth = async (auth: AuthRequest) => {
 		throw redirect(302, '/');
 	}
 	if (!session.user.isEditor) {
-		throw error(401, "You do not have editor access. Please contact the administrator.");
+		throw error(401, 'You do not have editor access. Please contact the administrator.');
 	}
 };
 
