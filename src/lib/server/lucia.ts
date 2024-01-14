@@ -4,15 +4,17 @@ import { sveltekit } from 'lucia/middleware';
 import { dev } from '$app/environment';
 import { discord } from '@lucia-auth/oauth/providers';
 import { BASE_URL, DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET } from '$env/static/private';
-import { redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import { swaAdapter } from '$lib/server/lucia-swa-db-adapter';
 
 export const auth = lucia({
 	env: dev ? 'DEV' : 'PROD',
 	middleware: sveltekit(),
 	adapter: swaAdapter,
-	getUserAttributes: () => {
-		return {};
+	getUserAttributes: (data) => {
+		return {
+			isEditor: data.isEditor
+		};
 	},
 	getSessionAttributes: (data) => {
 		return {
@@ -25,6 +27,9 @@ export const requireAuth = async (auth: AuthRequest) => {
 	const session = await auth.validate();
 	if (!session) {
 		throw redirect(302, '/');
+	}
+	if (!session.user.isEditor) {
+		throw error(401, "You do not have editor access. Please contact the administrator.");
 	}
 };
 
