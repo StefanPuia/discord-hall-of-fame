@@ -6,7 +6,7 @@ export const getGuildChannel = async (guildId: string) => {
 	if (!channel.data) {
 		throw error(404, 'server not configured');
 	}
-	return channel.data[0].hofChannelId;
+	return channel.data?.[0]?.hofChannelId;
 };
 
 export const getMessage = async (discordId: string): Promise<Post> => {
