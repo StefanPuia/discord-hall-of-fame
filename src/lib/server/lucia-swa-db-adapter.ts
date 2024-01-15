@@ -15,17 +15,25 @@ export const swaAdapter: InitializeAdapter<Adapter> = () => ({
 	deleteKey: () => Promise.reject('noop deleteKey'),
 	deleteKeysByUserId: () => Promise.reject('noop deleteKeysByUserId'),
 
-	getSession: (sessionId) =>
-		handleRequestSingle<SessionSchema>(`/user_session/id/${encodeURIComponent(sessionId)}`),
+	getSession: getSession,
 	getSessionsByUserId: (userId) =>
 		handleRequestMulti<SessionSchema>(`/user_session/user_id/${encodeURIComponent(userId)}`),
 	setSession: (session: SessionSchema) => service.post(`/user_session`, session),
-	updateSession: () => Promise.reject('noop updateSession'),
+	updateSession: async (sessionId, partialSession) => {
+		const session = await getSession(sessionId);
+		await service.patch(`/user_session/id/${encodeURIComponent(sessionId)}`, {
+			...session,
+			...partialSession
+		});
+	},
 	deleteSession: (sessionId: string) =>
 		service.delete(`/user_session/id/${encodeURIComponent(sessionId)}`),
 	deleteSessionsByUserId: (userId: string) =>
 		service.delete(`/user_session/user_id/${encodeURIComponent(userId)}`)
 });
+
+const getSession = (sessionId: string) =>
+	handleRequestSingle<SessionSchema>(`/user_session/id/${encodeURIComponent(sessionId)}`);
 
 async function handleRequestSingle<T>(url: string): Promise<T> {
 	const res = await service.get<T[]>(url);

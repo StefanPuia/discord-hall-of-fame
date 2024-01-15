@@ -16,7 +16,11 @@
 				"allow-credentials": false
 			},
 			"authentication": {
-				"provider": "StaticWebApps"
+				"provider": "AzureAD",
+				"jwt": {
+					"audience": "2c5580c1-01d7-4820-8b82-cff00309d647",
+					"issuer": "https://login.microsoftonline.com/b812f896-cd49-49d6-877c-ee7957717b86/v2.0"
+				}
 			}
 		}
 	},
@@ -26,7 +30,7 @@
 			"permissions": [
 				{
 					"actions": ["read", "create"],
-					"role": "anonymous"
+					"role": "authenticated"
 				}
 			]
 		},
@@ -35,7 +39,7 @@
 			"permissions": [
 				{
 					"actions": ["read"],
-					"role": "anonymous"
+					"role": "authenticated"
 				}
 			]
 		},
@@ -44,7 +48,7 @@
 			"permissions": [
 				{
 					"actions": ["read", "create", "update"],
-					"role": "anonymous"
+					"role": "authenticated"
 				}
 			]
 		},
@@ -53,7 +57,7 @@
 			"permissions": [
 				{
 					"actions": ["*"],
-					"role": "anonymous"
+					"role": "authenticated"
 				}
 			]
 		},
@@ -62,7 +66,7 @@
 			"permissions": [
 				{
 					"actions": ["*"],
-					"role": "anonymous"
+					"role": "authenticated"
 				}
 			]
 		}

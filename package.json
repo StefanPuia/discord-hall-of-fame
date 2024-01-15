@@ -12,7 +12,8 @@
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
 		"test:integration": "playwright test",
-		"test:unit": "vitest"
+		"test:unit": "vitest",
+		"swa-dev": "swa start --data-api-location swa-db-connections"
 	},
 	"devDependencies": {
 		"@azure/storage-blob": "^12.17.0",
@@ -31,6 +32,7 @@
 		"@typescript-eslint/parser": "^6.0.0",
 		"axios": "^1.6.5",
 		"axios-mock-adapter": "^1.22.0",
+		"axios-oauth-client": "^2.0.4",
 		"dayjs": "^1.11.10",
 		"discord.js": "^14.14.1",
 		"eslint": "^8.56.0",
