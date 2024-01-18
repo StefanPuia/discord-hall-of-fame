@@ -405,9 +405,9 @@
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
 "@lucia-auth/oauth@^3.5.1":
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/@lucia-auth/oauth/-/oauth-3.5.1.tgz#dfda9efda6dbe80e428b79f3c8a6814f7f1fbf55"
-  integrity sha512-GEohSpTt7M8LQgmA+wFuoq/Pb8afos4kZlFXTmmn8n+hUnV/40dEP0C4X735PbMo+QW9JIFkOggTfHDhB60XhA==
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/@lucia-auth/oauth/-/oauth-3.5.2.tgz#3904cdf6a657ebe4f7cb613d78c4e8e695815798"
+  integrity sha512-GAYKHs2d6VMx64f0gWk5ljdeEKLa4EsoFOWSZHVHVtsFHOLuaFtJBT2ybLGIUb6oyJbQ/fibjRwYoNXxI54iHQ==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
