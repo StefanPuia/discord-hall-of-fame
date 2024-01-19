@@ -31,6 +31,7 @@ const authenticate = async () => {
 	auth.expires = new Date().getTime() + auth.expires_in * 1000;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getAuthToken = async () => {
 	try {
 		if (!auth) {
@@ -51,11 +52,11 @@ export const service = axios.create({
 });
 
 service.interceptors.request.use(async (request) => {
-	await getAuthToken();
-	if (auth) {
-		request.headers = request.headers ?? new Headers();
-		request.headers?.set('Authorization', `${auth?.token_type} ${auth?.access_token}`);
-	}
+	// await getAuthToken();
+	// if (auth) {
+	// 	request.headers = request.headers ?? new Headers();
+	// 	request.headers?.set('Authorization', `${auth?.token_type} ${auth?.access_token}`);
+	// }
 	return request;
 });
 
