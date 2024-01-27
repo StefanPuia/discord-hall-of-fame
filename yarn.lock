@@ -1958,9 +1958,9 @@ lru-cache@^6.0.0:
     yallist "^4.0.0"
 
 lucia@^2.7.6:
-  version "2.7.6"
-  resolved "https://registry.yarnpkg.com/lucia/-/lucia-2.7.6.tgz#7407b7b3d44021a0f5630df1322c833be90ae1b2"
-  integrity sha512-xyRkNtevf0DUM4nGC6F2nCFFNphZ1qqBrfWwAgPa9zkpQsVJ/hN32I8zAY+pm+ZKWPPS/C/Sqqmo2LreSCzg7w==
+  version "2.7.7"
+  resolved "https://registry.yarnpkg.com/lucia/-/lucia-2.7.7.tgz#8d292d539439fc9ef6436f54e628aa1bc0737458"
+  integrity sha512-Hy1nMcLquLl3yDvV9zYA9fSBGUDy/Fw2zEUw2Ia4iGdk/O+hI/TvQ1tAfED/U1WE/c5DT1hEger3m7qIx1qbUg==
 
 magic-bytes.js@^1.5.0:
   version "1.7.0"
