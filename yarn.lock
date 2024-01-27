@@ -520,9 +520,9 @@
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
 "@lucia-auth/oauth@^3.5.1":
-  version "3.5.2"
-  resolved "https://registry.yarnpkg.com/@lucia-auth/oauth/-/oauth-3.5.2.tgz#3904cdf6a657ebe4f7cb613d78c4e8e695815798"
-  integrity sha512-GAYKHs2d6VMx64f0gWk5ljdeEKLa4EsoFOWSZHVHVtsFHOLuaFtJBT2ybLGIUb6oyJbQ/fibjRwYoNXxI54iHQ==
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/@lucia-auth/oauth/-/oauth-3.5.3.tgz#bd42117ba74fa3db570fef920254b0ba620bf6f1"
+  integrity sha512-3blBldenf2zXsSJTZUwzB+NxI+0KJljfMHT0WR7hyLNwi4Ijss7F2cQqk2xW1lGH3lzdmsV93ZsY9Yv8ekBRUw==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
