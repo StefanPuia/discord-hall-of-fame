@@ -734,9 +734,9 @@
     "@stitches/core" "1.2.8"
 
 "@svelteuidev/dates@^0.15.4":
-  version "0.15.5"
-  resolved "https://registry.yarnpkg.com/@svelteuidev/dates/-/dates-0.15.5.tgz#eb47a39b9dfaff2b37cebb6e0109f2f83b509c63"
-  integrity sha512-C6KkrlB7frCMgLLRhuj9S/qXZXyieZU7UpbcVCpbEsWjZu6lyizZPXp2h8rUvcFu2QYOzYffdOH7tLBiu8Z6Lg==
+  version "0.15.6"
+  resolved "https://registry.yarnpkg.com/@svelteuidev/dates/-/dates-0.15.6.tgz#c62340b678177694ae66b4fd57d7217a2b9c8460"
+  integrity sha512-VvvZAnQZ2XAtTygKSPMqZkajup0ai/maROIqfB/+i4VjbmKQKWpfgu/Jeitm0fU23+4uteHHO6Sn/c91FBLfeg==
   dependencies:
     dayjs "1.11.1"
 
