@@ -721,14 +721,14 @@
     vitefu "^0.2.5"
 
 "@svelteuidev/composables@^0.15.4":
-  version "0.15.5"
-  resolved "https://registry.yarnpkg.com/@svelteuidev/composables/-/composables-0.15.5.tgz#6d98e7c42c6f41b1661e192760282a6e14358c3a"
-  integrity sha512-tcnHE5GF2NPBlJjQVqtwpmqtKICItv9vVuORZvl1j78wCo8IdhAhKkptKyyUeM+Mgl1rSTEqOc8g4Z9dn01diw==
+  version "0.15.6"
+  resolved "https://registry.yarnpkg.com/@svelteuidev/composables/-/composables-0.15.6.tgz#18d8b2eba7aed5474878cb50f90ab1280f3e727b"
+  integrity sha512-uWlImPhLjvdI0uCMFrVxt4h0jcxX69RlImHaoDSQBMyArQHoSMb3fjdTNTAte8n9F2Oq0yqrncloybBcs7TDKA==
 
 "@svelteuidev/core@^0.15.4":
-  version "0.15.5"
-  resolved "https://registry.yarnpkg.com/@svelteuidev/core/-/core-0.15.5.tgz#228b466e3b3473de7147a304f9157894c99ca2c3"
-  integrity sha512-WtUugTyCo+fU67Rfd1EyObrm0frxku54H7jRGxzseo8ioYUc7PvAnuX5gXqeTi5/07x/kaTTVTbEr2p6dIf8ZA==
+  version "0.15.6"
+  resolved "https://registry.yarnpkg.com/@svelteuidev/core/-/core-0.15.6.tgz#0f3ce28e911129e38b6cced6fa2f095085fd2169"
+  integrity sha512-6UaoyVW/8G+2wi9h4SjnJdJe9G6aefZo5S4Rg9M8AKl2QfzKe45ZElcO8L8MgzHUnGTx0LPkwePJUVlWHjBuOg==
   dependencies:
     "@floating-ui/dom" "1.2.8"
     "@stitches/core" "1.2.8"
