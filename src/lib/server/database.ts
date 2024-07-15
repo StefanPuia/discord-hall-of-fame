@@ -4,7 +4,12 @@ import { isMockEnabled } from '$lib';
 import MockAdapter from 'axios-mock-adapter';
 import { dev } from '$app/environment';
 import { mockRoutes } from '../../mocks/mock.routes';
-import { AZURE_AD_CLIENT_ID, AZURE_AD_CLIENT_SECRET, AZURE_AD_TENANT_ID, DAB_BASE_URL } from '$env/static/private';
+import {
+	AZURE_AD_CLIENT_ID,
+	AZURE_AD_CLIENT_SECRET,
+	AZURE_AD_TENANT_ID,
+	DAB_BASE_URL
+} from '$env/static/private';
 
 type AuthType = {
 	token_type: string;
@@ -43,7 +48,7 @@ const getAuthToken = async () => {
 	}
 };
 export const service = axios.create({
-	baseURL: dev ? 'http://127.0.0.1:4280/data-api/rest' : `${DAB_BASE_URL}/data-api/rest`
+	baseURL: dev ? 'http://127.0.0.1:4280/data-api/rest' : `${DAB_BASE_URL}/rest`
 });
 
 service.interceptors.request.use(async (request) => {
