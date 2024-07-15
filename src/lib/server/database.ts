@@ -1,8 +1,7 @@
 import axios from 'axios';
-import oauth from 'axios-oauth-client';
+import { clientCredentials } from 'axios-oauth-client';
 import { isMockEnabled } from '$lib';
 import MockAdapter from 'axios-mock-adapter';
-import { dev } from '$app/environment';
 import { mockRoutes } from '../../mocks/mock.routes';
 import {
 	AZURE_AD_CLIENT_ID,
@@ -21,7 +20,7 @@ type AuthType = {
 let auth: AuthType | undefined = undefined;
 
 const authenticate = async () => {
-	const getOwnerCredentials = oauth.clientCredentials(
+	const getOwnerCredentials = clientCredentials(
 		axios.create(),
 		`https://login.microsoftonline.com/${AZURE_AD_TENANT_ID}/oauth2/v2.0/token`,
 		AZURE_AD_CLIENT_ID,
@@ -48,15 +47,15 @@ const getAuthToken = async () => {
 	}
 };
 export const service = axios.create({
-	baseURL: dev ? 'http://127.0.0.1:4280/data-api/rest' : `${DAB_BASE_URL}/rest`
+	baseURL: `${DAB_BASE_URL}/rest`
 });
 
 service.interceptors.request.use(async (request) => {
-	// await getAuthToken();
-	// if (auth) {
-	// 	request.headers = request.headers ?? new Headers();
-	// 	request.headers?.set('Authorization', `${auth?.token_type} ${auth?.access_token}`);
-	// }
+	await getAuthToken();
+	if (auth) {
+		request.headers = request.headers ?? new Headers();
+		request.headers?.set('Authorization', `${auth?.token_type} ${auth?.access_token}`);
+	}
 	return request;
 });
 
