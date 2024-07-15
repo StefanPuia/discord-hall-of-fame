@@ -42,7 +42,7 @@ resource "azurerm_application_insights" "appi" {
   tags                = local.tags
 }
 
-resource "azurerm_static_site" "site" {
+resource "azurerm_static_web_app" "site" {
   location            = local.site_location
   name                = "discord-hall-of-fame"
   resource_group_name = azurerm_resource_group.rg.name
@@ -116,5 +116,9 @@ resource "azurerm_container_app" "dab" {
       storage_name = azurerm_container_app_environment_storage.config.name
       storage_type = "AzureFile"
     }
+  }
+
+  lifecycle {
+    ignore_changes = [secret]
   }
 }
