@@ -1,0 +1,74 @@
+{
+  "$schema": "https://github.com/Azure/data-api-builder/releases/download/v1.1.7/dab.draft.schema.json",
+  "data-source": {
+    "database-type": "mysql",
+    "connection-string": "@env('DATABASE_CONNECTION_STRING')"
+  },
+  "runtime": {
+    "rest": {
+      "enabled": true,
+      "path": "/rest"
+    },
+    "host": {
+      "mode": "development",
+      "cors": {
+        "origins": ["http://localhost:4280", "http://localhost:5173"],
+        "allow-credentials": false
+      },
+      "authentication": {
+        "provider": "AzureAD",
+        "jwt": {
+          "audience": "2c5580c1-01d7-4820-8b82-cff00309d647",
+          "issuer": "https://login.microsoftonline.com/b812f896-cd49-49d6-877c-ee7957717b86/v2.0"
+        }
+      }
+    }
+  },
+  "entities": {
+    "user": {
+      "source": "user",
+      "permissions": [
+        {
+          "actions": ["read", "create"],
+          "role": "anonymous"
+        }
+      ]
+    },
+    "server": {
+      "source": "server",
+      "permissions": [
+        {
+          "actions": ["read"],
+          "role": "anonymous"
+        }
+      ]
+    },
+    "post": {
+      "source": "post",
+      "permissions": [
+        {
+          "actions": ["read", "create", "update"],
+          "role": "anonymous"
+        }
+      ]
+    },
+    "user_key": {
+      "source": "user_key",
+      "permissions": [
+        {
+          "actions": ["*"],
+          "role": "anonymous"
+        }
+      ]
+    },
+    "user_session": {
+      "source": "user_session",
+      "permissions": [
+        {
+          "actions": ["*"],
+          "role": "anonymous"
+        }
+      ]
+    }
+  }
+}

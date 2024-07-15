@@ -24,15 +24,15 @@ stages:
   #              BLOB_STORAGE_KEY: $(BLOB_STORAGE_KEY)
   #          - script: yarn run check
   #            displayName: Check
-  - ${{ if or(eq(variables.isDev, true), eq(variables.isMain, true)) }}:
-      - stage: deployDev
-        displayName: Deploy Preview Build
-        dependsOn: check
-        jobs:
-          - template: azure/deploy-environment.yml
-            parameters:
-              variables: deploy-dev
-              environment: preview
+  #  - ${{ if or(eq(variables.isDev, true), eq(variables.isMain, true)) }}:
+  #      - stage: deployDev
+  #        displayName: Deploy Preview Build
+  #        dependsOn: check
+  #        jobs:
+  #          - template: azure/deploy-environment.yml
+  #            parameters:
+  #              variables: deploy-dev
+  #              environment: preview
   - ${{ if eq(variables.isMain, true) }}:
       - stage: deployProd
         displayName: Deploy Production

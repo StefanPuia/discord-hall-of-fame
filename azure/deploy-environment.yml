@@ -11,6 +11,7 @@ jobs:
           azure_static_web_apps_api_token: $(deployment_token)
           deployment_environment: ${{ parameters.environment }}
         env:
+          DAB_BASE_URL: $(DAB_BASE_URL)
           DISCORD_CLIENT_SECRET: $(DISCORD_CLIENT_SECRET)
           DISCORD_BOT_TOKEN: $(DISCORD_BOT_TOKEN)
           BLOB_STORAGE_KEY: $(BLOB_STORAGE_KEY)
