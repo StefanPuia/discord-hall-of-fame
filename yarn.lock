@@ -576,9 +576,9 @@
     playwright "1.47.2"
 
 "@polka/url@^1.0.0-next.24":
-  version "1.0.0-next.25"
-  resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.25.tgz#f077fdc0b5d0078d30893396ff4827a13f99e817"
-  integrity sha512-j7P6Rgr3mmtdkeDGTe0E/aYyWEWVtc5yFXtHCRHs28/jptDEWfaVOc5T7cblqy1XKPPfCxJc/8DwQ5YgLOZOVQ==
+  version "1.0.0-next.28"
+  resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.28.tgz#d45e01c4a56f143ee69c54dd6b12eade9e270a73"
+  integrity sha512-8LduaNlMZGwdZ6qWrKlfa+2M4gahzFkprZiAt2TF8uS0qQgBizKXpXURqvTJ4WtmupWxaLqjRb2UCTe72mu+Aw==
 
 "@rollup/rollup-android-arm-eabi@4.22.4":
   version "4.22.4"
@@ -696,13 +696,13 @@
     import-meta-resolve "^4.1.0"
 
 "@sveltejs/kit@^2.0.0":
-  version "2.5.28"
-  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-2.5.28.tgz#13de1ccab39cf84fb82d1e8e7c89eb233e9622e2"
-  integrity sha512-/O7pvFGBsQPcFa9UrW8eUC5uHTOXLsUp3SN0dY6YmRAL9nfPSrJsSJk//j5vMpinSshzUjteAFcfQTU+04Ka1w==
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-2.6.0.tgz#4d6eaccf407d0b14aaa47841191e2fa9dd6273f4"
+  integrity sha512-oG8cCAopDQavdN+RbzanNpfyUWsTbZ2Nt1zNioBm8thXLo1/8VtwP/KvlJW2HgrdN235NI4IL5bSZjTEXKuifQ==
   dependencies:
     "@types/cookie" "^0.6.0"
     cookie "^0.6.0"
-    devalue "^5.0.0"
+    devalue "^5.1.0"
     esm-env "^1.0.0"
     import-meta-resolve "^4.1.0"
     kleur "^4.1.5"
@@ -1269,10 +1269,10 @@ detect-indent@^6.1.0:
   resolved "https://registry.yarnpkg.com/detect-indent/-/detect-indent-6.1.0.tgz#592485ebbbf6b3b1ab2be175c8393d04ca0d57e6"
   integrity sha512-reYkTUJAZb9gUuZ2RvVCNhVHdg62RHnJ7WJl8ftMi4diZ6NWlciOzQN88pUhSELEwflJht4oQDv0F0BMlwaYtA==
 
-devalue@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/devalue/-/devalue-5.0.0.tgz#1ca0099a7d715b4d6cac3924e770ccbbc584ad98"
-  integrity sha512-gO+/OMXF7488D+u3ue+G7Y4AA3ZmUnB3eHJXmBTgNHvr4ZNzl36A0ZtG+XCRNYCkYx/bFmw4qtkoFLa+wSrwAA==
+devalue@^5.1.0:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/devalue/-/devalue-5.1.1.tgz#a71887ac0f354652851752654e4bd435a53891ae"
+  integrity sha512-maua5KUiapvEwiEAe+XnlZ3Rh0GD+qI1J/nb9vrJc3muPXvcF/8gXYTWF76+5DAqHyDUtOIImEuo0YKE9mshVw==
 
 diff-sequences@^29.6.3:
   version "29.6.3"
