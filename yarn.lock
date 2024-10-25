@@ -689,9 +689,9 @@
   integrity sha512-Gfkvwk9o9kE9r9XNBmJRfV8zONvXThnm1tcuojL04Uy5uRyqg93DC83lDebl0rocZCfKSjUv+fWYtMQmEDJldg==
 
 "@sveltejs/adapter-auto@^3.0.0":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/@sveltejs/adapter-auto/-/adapter-auto-3.3.0.tgz#34ebe894616a53c4bcee4a5e6cc0d8dd5acdeade"
-  integrity sha512-EJZqY7eMM+bdbR898Xt9ufawUHLPJu7w3wPr4Cc+T1iIDf3fufVLWg4C71OluIqsdJqv85E4biKuHo3XXIY0PQ==
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/@sveltejs/adapter-auto/-/adapter-auto-3.3.1.tgz#57a3d9c402bea468f0899755758551e7e74deaae"
+  integrity sha512-5Sc7WAxYdL6q9j/+D0jJKjGREGlfIevDyHSQ2eNETHcB1TKlQWHcAo8AS8H1QdjNvSXpvOwNjykDUHPEAyGgdQ==
   dependencies:
     import-meta-resolve "^4.1.0"
 
