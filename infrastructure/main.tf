@@ -1,5 +1,12 @@
 terraform {
-  backend "azurerm" {}
+  backend "azurerm" {
+    subscription_id      = "1fc2278a-be10-4749-90f3-cf0276470cf7"
+    resource_group_name  = "rg-terraform"
+    storage_account_name = "spuksterraform"
+    container_name       = "discord-hall-of-fame"
+    key                  = "discord-hall-of-fame.tfstate"
+    use_oidc             = true
+  }
 }
 
 provider "azurerm" {
@@ -67,58 +74,4 @@ resource "azurerm_container_app_environment_storage" "config" {
   access_key                   = azurerm_storage_account.storage.primary_access_key
   access_mode                  = "ReadOnly"
   container_app_environment_id = local.container_env_id
-}
-
-resource "azurerm_container_app" "dab" {
-  name                         = "app-${local.location_key}-discord-hall-of-fame-dab"
-  container_app_environment_id = local.container_env_id
-  resource_group_name          = azurerm_resource_group.rg.name
-  revision_mode                = "Single"
-  workload_profile_name        = "Consumption"
-
-  secret {
-    name  = local.app_secret_name_db_conn
-    value = data.azurerm_key_vault_secret.db_conn_string.value
-  }
-
-  ingress {
-    target_port      = local.port
-    external_enabled = true
-    traffic_weight {
-      latest_revision = true
-      percentage      = 100
-    }
-  }
-
-  template {
-    max_replicas = 1
-
-    container {
-      name   = "discord-hof-dab"
-      image  = "mcr.microsoft.com/azure-databases/data-api-builder:latest"
-      cpu    = "0.25"
-      memory = "0.5Gi"
-      command = ["dotnet", "Azure.DataApiBuilder.Service.dll", "--ConfigFileName", "/cfg/dab-config.json"]
-
-      env {
-        name        = "DATABASE_CONNECTION_STRING"
-        secret_name = local.app_secret_name_db_conn
-      }
-
-      volume_mounts {
-        name = "config"
-        path = "/cfg"
-      }
-    }
-
-    volume {
-      name         = "config"
-      storage_name = azurerm_container_app_environment_storage.config.name
-      storage_type = "AzureFile"
-    }
-  }
-
-  lifecycle {
-    ignore_changes = [secret]
-  }
 }
