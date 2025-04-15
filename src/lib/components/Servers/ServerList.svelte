@@ -1,14 +1,16 @@
 <script lang="ts">
 	import { Grid, Text } from '@svelteuidev/core';
-	import { userStore } from '$lib/stores';
 	import GuildCard from '$lib/components/Guild/GuildCard.svelte';
+	import type { DiscordGuild } from '$lib/types';
+
+	export let guilds: DiscordGuild[] = [];
 </script>
 
-{#if $userStore?.guilds.length}
+{#if guilds.length}
 	<Text size="xl" mb="xl">Choose which server to manage:</Text>
 
 	<Grid>
-		{#each $userStore?.guilds ?? [] as guild}
+		{#each guilds ?? [] as guild}
 			<Grid.Col span={3}>
 				<GuildCard {guild} />
 			</Grid.Col>

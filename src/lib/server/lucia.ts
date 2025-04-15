@@ -1,19 +1,15 @@
-import type { AuthRequest } from 'lucia';
-import { lucia } from 'lucia';
-import { sveltekit } from 'lucia/middleware';
-import { dev } from '$app/environment';
-import { discord } from '@lucia-auth/oauth/providers';
-import { BASE_URL, DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET } from '$env/static/private';
-import { error, redirect } from '@sveltejs/kit';
-import { swaAdapter } from '$lib/server/lucia-swa-db-adapter';
+import { Lucia } from 'lucia';
+import { MongodbAdapter } from '@lucia-auth/adapter-mongodb';
+import { Discord } from 'arctic';
+import { env } from '$env/dynamic/private';
+import { Session, User } from '$lib/server/database';
 
-export const auth = lucia({
-	env: dev ? 'DEV' : 'PROD',
-	middleware: sveltekit(),
-	adapter: swaAdapter,
+const adapter = new MongodbAdapter(Session, User);
+
+export const auth = new Lucia(adapter, {
 	getUserAttributes: (data) => {
 		return {
-			isEditor: data.isEditor
+			discordId: data.discordId
 		};
 	},
 	getSessionAttributes: (data) => {
@@ -23,21 +19,21 @@ export const auth = lucia({
 	}
 });
 
-export const requireAuth = async (auth: AuthRequest) => {
-	const session = await auth.validate();
-	if (!session) {
-		throw redirect(302, '/');
-	}
-	if (!session.user.isEditor) {
-		throw error(401, 'You do not have editor access. Please contact the administrator.');
-	}
-};
-
-export const discordAuth = discord(auth, {
-	clientId: DISCORD_CLIENT_ID,
-	clientSecret: DISCORD_CLIENT_SECRET,
-	redirectUri: `${BASE_URL}/login/discord/callback`,
-	scope: ['identify', 'guilds']
-});
+export const discordAuth = new Discord(
+	env.DISCORD_CLIENT_ID,
+	env.DISCORD_CLIENT_SECRET,
+	`${env.BASE_URL}/login/discord/callback`
+);
+export const DISCORD_SCOPES = ['identify', 'guilds'];
 
 export type Auth = typeof auth;
+
+
+export const requireAuth = (session: App.Locals['session']) => {
+	// if (!session) {
+	// 	throw redirect(302, '/');
+	// }
+	// if (!session.isEditor) {
+	// 	throw error(401, 'You do not have editor access. Please contact the administrator.');
+	// }
+};

@@ -34,12 +34,12 @@ export const getMessages = async (channelId: string): Promise<HofMessage[]> => {
 export const postMessage = async (
 	channelId: string,
 	message: HofMessage,
-	image: Buffer
+	image: ArrayBufferLike,
 ): Promise<HofMessage> => {
 	const discordMessage = (await rest.post(Routes.channelMessages(channelId), {
 		files: [
 			{
-				data: image,
+				data: Buffer.from(image),
 				name: 'image.jpg'
 			}
 		],
@@ -58,16 +58,16 @@ export const updateMessage = async (
 	channelId: string,
 	messageId: string,
 	message: HofMessage,
-	imageBuffer?: Buffer
+	imageBuffer?: ArrayBufferLike
 ) => {
 	let image = imageBuffer;
 	if (!image) {
-		image = (await (await fetch(message.imageURL)).arrayBuffer()) as Buffer;
+		image = await (await fetch(message.imageURL)).arrayBuffer();
 	}
 	await rest.patch(Routes.channelMessage(channelId, messageId), {
 		files: [
 			{
-				data: image as Buffer,
+				data: Buffer.from(image),
 				name: 'image.jpg'
 			}
 		],
@@ -84,7 +84,7 @@ export const deleteMessage = async (channelId: string, messageId: string) => {
 
 const mapMessage = (message: Message): HofMessage => {
 	const { title, date } =
-		message?.content.match(/\*\*(?<title>.+?)\*\*\n\*(?<date>.+?)\*/)?.groups ?? {};
+	message?.content.match(/\*\*(?<title>.+?)\*\*\n\*(?<date>.+?)\*/)?.groups ?? {};
 	return {
 		discordId: message.id,
 		title,

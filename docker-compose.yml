@@ -1,0 +1,16 @@
+name: discord-hof
+
+services:
+  mongodb:
+    hostname: discord-hof-mongodb
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite:latest
+    ports:
+      - '10000-10002:10000-10002'

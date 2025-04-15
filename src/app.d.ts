@@ -10,23 +10,31 @@ declare global {
 		// interface Error {}
 
 		interface Locals {
-			auth: import('lucia').AuthRequest;
+			user: (import('lucia').User & DatabaseUserAttributes) | null;
+			session: (import('lucia').Session & DatabaseSessionAttributes) | null;
 		}
 
 		// interface PageData {}
 		// interface PageState {}
 		// interface Platform {}
 	}
+}
 
-	namespace Lucia {
-		type Auth = import('$lib/server/lucia').Auth;
-		type DatabaseUserAttributes = {
-			isEditor: boolean;
-		};
-		type DatabaseSessionAttributes = {
-			guilds: DiscordGuild[];
-		};
+declare module 'lucia' {
+	interface Register {
+		Lucia: typeof lucia;
+		DatabaseUserAttributes: DatabaseUserAttributes;
+		DatabaseSessionAttributes: DatabaseSessionAttributes;
 	}
+}
+
+
+interface DatabaseUserAttributes {
+	discordId: string;
+}
+
+interface DatabaseSessionAttributes {
+	guilds: DiscordGuild[];
 }
 
 export {};

@@ -64,6 +64,7 @@ resource "azurerm_static_web_app" "site" {
 
   app_settings = {
     APPLICATIONINSIGHTS_CONNECTION_STRING : azurerm_application_insights.appi.connection_string
+    MONGODB_CONN_URL : azurerm_cosmosdb_account.account.primary_mongodb_connection_string
   }
 }
 

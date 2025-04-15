@@ -1,8 +1,6 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
 	import Logo from './_Logo.svelte';
 	import { Anchor, Burger, Button, Group, Text } from '@svelteuidev/core';
-	import { userStore } from '$lib/stores';
 	import { page } from '$app/stores';
 	import GuildCard from '$lib/components/Guild/GuildCard.svelte';
 	import type { DiscordGuild } from '$lib/types';
@@ -14,7 +12,7 @@
 
 	$: {
 		let serverId = $page.params.serverId;
-		guild = $userStore && $userStore.guilds.find((g) => g.id === `${serverId}`);
+		guild = $page.data.guilds?.find((g) => g.id === `${serverId}`);
 	}
 </script>
 
@@ -35,11 +33,9 @@
 			{/if}
 		</Group>
 	</Anchor>
-	{#if $userStore}
-		<Group>
-			<form method="post" action="/?/logout" use:enhance on:submit={() => ($userStore = null)}>
-				<Button type="submit">Sign out</Button>
-			</form>
-		</Group>
-	{/if}
+	<Group>
+		<form method="post" action="/logout">
+			<Button type="submit">Sign out</Button>
+		</form>
+	</Group>
 </Group>
