@@ -5,9 +5,13 @@
 /// <reference types="lucia" />
 /// <reference types="./lib/types" />
 
+import type { DiscordGuild } from '$lib/types';
+
 declare global {
 	namespace App {
-		// interface Error {}
+		interface Error {
+			code?: string;
+		}
 
 		interface Locals {
 			user: (import('lucia').User & DatabaseUserAttributes) | null;

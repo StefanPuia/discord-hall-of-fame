@@ -2,15 +2,38 @@ name: discord-hof
 
 services:
   mongodb:
-    hostname: discord-hof-mongodb
     image: mongo:latest
     ports:
       - 27017:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
+    volumes:
+      - discord-hof-mongo-data:/data/db
 
   azurite:
     image: mcr.microsoft.com/azure-storage/azurite:latest
     ports:
       - '10000-10002:10000-10002'
+    healthcheck:
+      test: nc 127.0.0.1 10000 -z
+      interval: 1s
+      retries: 30
+
+  azurite_init:
+    image: mcr.microsoft.com/azure-cli:latest
+    command:
+      - /bin/sh
+      - -c
+      - |
+        az storage container create --name uploads
+    depends_on:
+      azurite:
+        condition: service_healthy
+    environment:
+      # https://github.com/Azure/Azurite/blob/main/README.md#usage-with-azure-storage-sdks-or-tools
+      AZURE_STORAGE_CONNECTION_STRING: DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1;
+
+
+volumes:
+  discord-hof-mongo-data: {}

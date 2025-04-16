@@ -4,9 +4,9 @@ import { getPostByDiscordId, getPostsByChannel, getServer, type PostDoc } from '
 export const getGuildChannel = async (guildId: string) => {
 	const channel = await getServer(guildId);
 	if (!channel) {
-		throw error(404, 'server not configured');
+		throw error(404, { message: 'server not configured', code: 'SERVER_NOT_CONFIGURED' });
 	}
-	return channel.hofChannelId;
+	return channel?.hofChannelId;
 };
 
 export const getMessage = async (discordId: string): Promise<PostDoc | null> => {

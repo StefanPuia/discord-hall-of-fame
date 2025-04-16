@@ -4,12 +4,10 @@ import { correlate } from '$lib/server/messages';
 import { deleteMessage, postMessage, updateMessage } from '$lib/server/discord-bot';
 import dayjs from 'dayjs';
 import { redirect } from '@sveltejs/kit';
-// import { requireAuth } from '$lib/server/lucia';
 import { backupMessage } from '$lib/server/backup';
 import { createPost, deletePost } from '$lib/server/database';
 
-export const load: PageServerLoad = async ({ params: { serverId, postId }, locals }) => {
-	// await requireAuth(locals.auth);
+export const load: PageServerLoad = async ({ params: { serverId, postId } }) => {
 	const guildChannel = await getGuildChannel(serverId);
 	return {
 		message: correlate(guildChannel, postId)
@@ -17,8 +15,7 @@ export const load: PageServerLoad = async ({ params: { serverId, postId }, local
 };
 
 export const actions: Actions = {
-	save: async ({ params: { postId, serverId }, locals, request }) => {
-		// await requireAuth(locals.auth);
+	save: async ({ params: { postId, serverId }, request }) => {
 
 		const formData = await request.formData();
 		const existing = await correlate(await getGuildChannel(serverId), postId);
@@ -50,8 +47,7 @@ export const actions: Actions = {
 		return redirect(302, `/${serverId}/${postId}`);
 	},
 
-	post: async ({ params: { postId, serverId }, locals }) => {
-		// await requireAuth(locals.auth);
+	post: async ({ params: { postId, serverId } }) => {
 
 		const channelId = await getGuildChannel(serverId);
 		const existing = await correlate(await getGuildChannel(serverId), postId);
@@ -71,8 +67,7 @@ export const actions: Actions = {
 		return redirect(302, `/${serverId}/${message.discordId}`);
 	},
 
-	delete: async ({ params: { postId, serverId }, locals }) => {
-		// await requireAuth(locals.auth);
+	delete: async ({ params: { postId, serverId } }) => {
 		await deleteMessage(await getGuildChannel(serverId), postId);
 		return redirect(302, `/${serverId}/${postId}`);
 	}

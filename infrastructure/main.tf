@@ -65,6 +65,13 @@ resource "azurerm_static_web_app" "site" {
   app_settings = {
     APPLICATIONINSIGHTS_CONNECTION_STRING : azurerm_application_insights.appi.connection_string
     MONGODB_CONN_URL : azurerm_cosmosdb_account.account.primary_mongodb_connection_string
+    MONGODB_DATABASE : azurerm_cosmosdb_mongo_database.hof_prod.name
+    BLOB_STORAGE_ACCOUNT : azurerm_storage_account.storage.name
+    BLOB_STORAGE_KEY : azurerm_storage_account.storage.primary_access_key
+    DISCORD_CLIENT_ID : data.azurerm_key_vault_secret.discord_client_id
+    DISCORD_CLIENT_SECRET : data.azurerm_key_vault_secret.discord_client_secret
+    DISCORD_BOT_ID : data.azurerm_key_vault_secret.discord_bot_id
+    DISCORD_BOT_TOKEN : data.azurerm_key_vault_secret.discord_bot_token
   }
 }
 

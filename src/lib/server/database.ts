@@ -48,7 +48,7 @@ class Database {
 			Database.instance = new MongoClient(Database.getDbUrl());
 			Database.instance.connect().catch(console.error);
 		}
-		return Database.instance.db('hof');
+		return Database.instance.db(env.MONGODB_DATABASE);
 	}
 }
 

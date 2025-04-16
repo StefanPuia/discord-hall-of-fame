@@ -25,15 +25,3 @@ export const discordAuth = new Discord(
 	`${env.BASE_URL}/login/discord/callback`
 );
 export const DISCORD_SCOPES = ['identify', 'guilds'];
-
-export type Auth = typeof auth;
-
-
-export const requireAuth = (session: App.Locals['session']) => {
-	// if (!session) {
-	// 	throw redirect(302, '/');
-	// }
-	// if (!session.isEditor) {
-	// 	throw error(401, 'You do not have editor access. Please contact the administrator.');
-	// }
-};
