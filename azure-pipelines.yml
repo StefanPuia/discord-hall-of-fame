@@ -3,41 +3,117 @@ trigger:
   - '*'
 
 variables:
-  isDev: ${{ eq(variables['Build.SourceBranch'], 'refs/heads/dev') }}
   isMain: ${{ eq(variables['Build.SourceBranch'], 'refs/heads/main') }}
+  dockerRegistry: stefanpuia.azurecr.io
+  dockerImage: discord-hof
+  dockerImageVersion: $(Build.BuildNumber)
+  dockerRegistryServiceConnection: azureContainerRegistry-discord-hall-of-fame
+  dockerContainerName: discord-hof
+  dockerContainerPort: 38142
 
 stages:
-  - stage: check
-    displayName: Check
+  - stage: checkAndBuild
+    displayName: Check and Build
     jobs:
-      - job: check
+      - job: checkAndBuild
         steps:
           - script: yarn install --frozen-lockfile
             displayName: Install Dependencies
+
           - script: yarn lint
             displayName: Lint
-  #          - script: yarn build
-  #            displayName: Build
-  #            env:
-  #              DISCORD_CLIENT_SECRET: $(DISCORD_CLIENT_SECRET)
-  #              DISCORD_BOT_TOKEN: $(DISCORD_BOT_TOKEN)
-  #              BLOB_STORAGE_KEY: $(BLOB_STORAGE_KEY)
-  #          - script: yarn run check
-  #            displayName: Check
-  #  - ${{ if or(eq(variables.isDev, true), eq(variables.isMain, true)) }}:
-  #      - stage: deployDev
-  #        displayName: Deploy Preview Build
-  #        dependsOn: check
-  #        jobs:
-  #          - template: azure/deploy-environment.yml
-  #            parameters:
-  #              variables: deploy-dev
-  #              environment: preview
+
+          - script: yarn build
+            displayName: Build
+
+          - task: Docker@2
+            displayName: Build docker image
+            inputs:
+              command: build
+              repository: $(dockerRegistry)/$(dockerImage)
+              tags: $(dockerImageVersion)
+
+          - ${{ if eq(variables.isMain, true) }}:
+              - task: Docker@2
+                displayName: Login to ACR
+                inputs:
+                  command: login
+                  containerRegistry: $(dockerRegistryServiceConnection)
+
+              - task: Docker@2
+                displayName: Push image
+                inputs:
+                  command: push
+                  containerRegistry: $(dockerRegistryServiceConnection)
+                  repository: $(dockerImage)
+                  tags: $(dockerImageVersion)
+
+              - task: Docker@2
+                displayName: Docker Logout
+                inputs:
+                  command: logout
+                  containerRegistry: $(dockerRegistryServiceConnection)
+                condition: always()
+
   - ${{ if eq(variables.isMain, true) }}:
       - stage: deployProd
-        displayName: Deploy Production
-        dependsOn: check
+        displayName: Deploy
+        dependsOn: checkAndBuild
         jobs:
-          - template: azure/deploy-environment.yml
-            parameters:
-              variables: deploy-prod
+          - deployment: deployProd
+            pool: prod-vm-uks-core
+            environment: prod
+            variables:
+              - group: deploy-prod
+              - group: deploy-prod-kv
+            strategy:
+              runOnce:
+                deploy:
+                  steps:
+                    - task: Docker@2
+                      displayName: Login to ACR
+                      inputs:
+                        command: login
+                        containerRegistry: $(dockerRegistryServiceConnection)
+
+                    - script: docker pull $(dockerRegistry)/$(dockerImage):$(dockerImageVersion)
+                      displayName: Pull image
+
+                    - task: Docker@2
+                      displayName: Docker Logout
+                      inputs:
+                        command: logout
+                        containerRegistry: $(dockerRegistryServiceConnection)
+                      condition: always()
+
+                    - script: docker rm -f $(dockerContainerName)
+                      displayName: Remove existing container
+
+                    - script: |
+                        docker run -d \
+                          --name $(dockerContainerName) \
+                          --restart always \
+                          -p $(dockerContainerPort):8080 \
+                          -e PORT \
+                          -e BASE_URL \
+                          -e MONGODB_CONN_URL \
+                          -e MONGODB_DATABASE \
+                          -e DISCORD_CLIENT_ID \
+                          -e DISCORD_CLIENT_SECRET \
+                          -e DISCORD_BOT_ID \
+                          -e DISCORD_BOT_TOKEN \
+                          -e BLOB_STORAGE_ACCOUNT \
+                          -e BLOB_STORAGE_KEY \
+                          $(dockerRegistry)/$(dockerImage):$(dockerImageVersion)
+                      displayName: Start container
+                      env:
+                        PORT: 8080
+                        BASE_URL: $(appBaseUrl)
+                        MONGODB_CONN_URL: $(database-url)
+                        MONGODB_DATABASE: $(database-name)
+                        DISCORD_CLIENT_ID: $(discord-client-id)
+                        DISCORD_CLIENT_SECRET: $(discord-client-secret)
+                        DISCORD_BOT_ID: $(discord-client-id)
+                        DISCORD_BOT_TOKEN: $(discord-bot-token)
+                        BLOB_STORAGE_ACCOUNT: $(blob-storage-account)
+                        BLOB_STORAGE_KEY: $(blob-storage-key)

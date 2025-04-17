@@ -5,7 +5,7 @@ import { createPost } from '$lib/server/database';
 export const backupMessage = async (
 	channelId: string,
 	message: HofMessage,
-	imageBuffer: Buffer
+	imageBuffer: ArrayBufferLike
 ) => {
 	const blobName = await uploadHofImage(channelId, message.discordId, imageBuffer);
 	await createPost({

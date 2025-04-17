@@ -1,107 +1,72 @@
-import axios from 'axios';
-import { clientCredentials } from 'axios-oauth-client';
-import { isMockEnabled } from '$lib';
-import MockAdapter from 'axios-mock-adapter';
-import { mockRoutes } from '../../mocks/mock.routes';
-import {
-	AZURE_AD_CLIENT_ID,
-	AZURE_AD_CLIENT_SECRET,
-	AZURE_AD_TENANT_ID,
-	DAB_BASE_URL
-} from '$env/static/private';
+import { Collection, MongoClient } from 'mongodb';
+import { env } from '$env/dynamic/private';
+import { building } from '$app/environment';
+import type { DiscordGuild } from '$lib/types';
+import { generateIdFromEntropySize } from 'lucia';
 
-type AuthType = {
-	token_type: string;
-	expires_in: number;
-	access_token: string;
-	expires?: number;
-};
-
-let auth: AuthType | undefined = undefined;
-
-const authenticate = async () => {
-	const getOwnerCredentials = clientCredentials(
-		axios.create(),
-		`https://login.microsoftonline.com/${AZURE_AD_TENANT_ID}/oauth2/v2.0/token`,
-		AZURE_AD_CLIENT_ID,
-		AZURE_AD_CLIENT_SECRET
-	);
-	auth = (await getOwnerCredentials(`${AZURE_AD_CLIENT_ID}/.default`)) as AuthType;
-	auth.expires = new Date().getTime() + auth.expires_in * 1000;
-};
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const getAuthToken = async () => {
-	try {
-		if (!auth) {
-			await authenticate();
-		} else {
-			const now = new Date().getTime();
-			if (now > (auth?.expires ?? 0) - 2000) {
-				auth = undefined;
-				await getAuthToken();
-			}
-		}
-	} catch (e) {
-		console.error('failed to get auth token');
-	}
-};
-export const service = axios.create({
-	baseURL: `${DAB_BASE_URL}/rest`
-});
-
-service.interceptors.request.use(async (request) => {
-	await getAuthToken();
-	if (auth) {
-		request.headers = request.headers ?? new Headers();
-		request.headers?.set('Authorization', `${auth?.token_type} ${auth?.access_token}`);
-	}
-	return request;
-});
-
-service.interceptors.response.use((response) => {
-	if (response.data?.value) {
-		response.data = response.data.value;
-	}
-	return response;
-});
-
-if (isMockEnabled()) {
-	const mockAdapter = new MockAdapter(service, { delayResponse: 1000 });
-	mockRoutes(mockAdapter);
+export interface UserDoc {
+	_id: string;
+	discordId: string;
 }
 
-export const getServer = (discordId: string) =>
-	service.get<Server[]>(`/server/discordId/${encodeURIComponent(discordId)}`);
-export const getPostByDiscordId = (discordId: string) =>
-	service.get<Post[]>(`/post/discordId/${encodeURIComponent(discordId)}`);
-export const getPostsByChannel = (channelId: string) =>
-	service.get<Post[]>(`/post`, {
-		params: {
-			$filter: `channel eq '${encodeURIComponent(channelId)}' and deleted eq null`
-		}
-	});
-export const createPost = (post: Omit<Post, 'id'>) => service.post(`/post`, post);
-export const deletePost = (discordId: string) =>
-	service.patch(`/post/discordId/${encodeURIComponent(discordId)}`, {
-		deleted: new Date().toISOString()
-	});
-
-export type User = {
-	id: string;
-	discordId: string;
-};
-
-export type Server = {
+export interface ServerDoc {
+	_id: string;
 	discordId: string;
 	hofChannelId: string;
-};
+}
 
-export type Post = {
+export interface PostDoc {
+	_id: string;
 	discordId: string;
 	date: string;
 	file: string;
 	title: string;
 	channel: string;
 	deleted?: string;
-};
+}
+
+export interface SessionDoc {
+	_id: string;
+	expires_at: Date;
+	user_id: string;
+	guilds: DiscordGuild[];
+}
+
+class Database {
+	private static instance: MongoClient;
+
+	private static getDbUrl() {
+		if (building) {
+			return 'mongodb://root:root@localhost:27017/';
+		}
+		return env.MONGODB_CONN_URL!;
+	}
+
+	public static get() {
+		if (!Database.instance) {
+			Database.instance = new MongoClient(Database.getDbUrl());
+			Database.instance.connect().catch(console.error);
+		}
+		return Database.instance.db(env.MONGODB_DATABASE);
+	}
+}
+
+export const User = Database.get().collection('users') as Collection<UserDoc>;
+export const Server = Database.get().collection('servers') as Collection<ServerDoc>;
+export const Post = Database.get().collection('posts') as Collection<PostDoc>;
+export const Session = Database.get().collection('sessions') as Collection<SessionDoc>;
+
+export const getServer = (discordId: string) => Server.findOne({ discordId });
+export const getPostByDiscordId = (discordId: string) => Post.findOne({ discordId });
+export const getPostsByChannel = (channelId: string) =>
+	Post.find({
+		channel: channelId,
+		deleted: { $exists: false }
+	});
+export const createPost = (post: Omit<PostDoc, '_id'>) =>
+	Post.insertOne({
+		...post,
+		_id: generateIdFromEntropySize(10)
+	});
+export const deletePost = (discordId: string) =>
+	Post.updateOne({ discordId }, { $set: { deleted: new Date().toISOString() } });

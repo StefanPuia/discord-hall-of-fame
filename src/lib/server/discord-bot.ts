@@ -1,5 +1,5 @@
 import { Attachment, Message, REST, Routes } from 'discord.js';
-import { DISCORD_BOT_ID, DISCORD_BOT_TOKEN } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import { discordGuildMapper } from '$lib/mappers';
 import dayjs from 'dayjs';
 import type { DiscordGuild, HofMessage } from '$lib/types';
@@ -11,7 +11,7 @@ const cache: {
 	botGuilds: null
 };
 
-const rest = new REST({ authPrefix: 'Bot' }).setToken(DISCORD_BOT_TOKEN);
+const rest = new REST({ authPrefix: 'Bot' }).setToken(env.DISCORD_BOT_TOKEN);
 
 export const getBotGuilds = async () => {
 	if (!cache.botGuilds) {
@@ -28,18 +28,18 @@ export const getMessage = async (channelId: string, messageId: string): Promise<
 
 export const getMessages = async (channelId: string): Promise<HofMessage[]> => {
 	const messages = (await rest.get(Routes.channelMessages(channelId))) as Message[];
-	return messages.filter((m) => m.author.id === DISCORD_BOT_ID).map(mapMessage);
+	return messages.filter((m) => m.author.id === env.DISCORD_BOT_ID).map(mapMessage);
 };
 
 export const postMessage = async (
 	channelId: string,
 	message: HofMessage,
-	image: Buffer
+	image: ArrayBufferLike
 ): Promise<HofMessage> => {
 	const discordMessage = (await rest.post(Routes.channelMessages(channelId), {
 		files: [
 			{
-				data: image,
+				data: Buffer.from(image),
 				name: 'image.jpg'
 			}
 		],
@@ -58,16 +58,16 @@ export const updateMessage = async (
 	channelId: string,
 	messageId: string,
 	message: HofMessage,
-	imageBuffer?: Buffer
+	imageBuffer?: ArrayBufferLike
 ) => {
 	let image = imageBuffer;
 	if (!image) {
-		image = (await (await fetch(message.imageURL)).arrayBuffer()) as Buffer;
+		image = await (await fetch(message.imageURL)).arrayBuffer();
 	}
 	await rest.patch(Routes.channelMessage(channelId, messageId), {
 		files: [
 			{
-				data: image as Buffer,
+				data: Buffer.from(image),
 				name: 'image.jpg'
 			}
 		],
@@ -92,4 +92,8 @@ const mapMessage = (message: Message): HofMessage => {
 		imageURL: (message.attachments as unknown as Attachment[])[0].url,
 		exists: true
 	};
+};
+
+export const isUserOwner = (user?: App.Locals['user']) => {
+	return (env.DISCORD_OWNERS || '').split(',').includes(user?.discordId || '-1');
 };
