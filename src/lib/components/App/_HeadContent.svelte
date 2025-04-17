@@ -33,9 +33,11 @@
 			{/if}
 		</Group>
 	</Anchor>
-	<Group>
-		<form method="post" action="/logout">
-			<Button type="submit">Sign out</Button>
-		</form>
-	</Group>
+	{#if $page.data.guilds !== undefined}
+		<Group>
+			<form method="post" action="/logout">
+				<Button type="submit">Sign out</Button>
+			</form>
+		</Group>
+	{/if}
 </Group>

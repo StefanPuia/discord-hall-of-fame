@@ -15,13 +15,17 @@ export interface ServerDoc {
 	hofChannelId: string;
 }
 
-export interface PostDoc {
-	_id: string;
+interface NewPostDoc {
 	discordId: string;
 	date: string;
 	file: string;
 	title: string;
 	channel: string;
+}
+
+export interface PostDoc extends NewPostDoc {
+	_id: string;
+	created: string;
 	deleted?: string;
 }
 
@@ -63,10 +67,11 @@ export const getPostsByChannel = (channelId: string) =>
 		channel: channelId,
 		deleted: { $exists: false }
 	});
-export const createPost = (post: Omit<PostDoc, '_id'>) =>
+export const createPost = (post: NewPostDoc) =>
 	Post.insertOne({
 		...post,
-		_id: generateIdFromEntropySize(10)
+		_id: generateIdFromEntropySize(10),
+		created: new Date().toISOString()
 	});
 export const deletePost = (discordId: string) =>
 	Post.updateOne({ discordId }, { $set: { deleted: new Date().toISOString() } });
