@@ -2,7 +2,12 @@ import { prepareStylesSSR } from '@svelteuidev/core';
 import { sequence } from '@sveltejs/kit/hooks';
 import type { Handle } from '@sveltejs/kit';
 import { auth } from '$lib/server/lucia';
-import type { RegisteredDatabaseSessionAttributes, RegisteredDatabaseUserAttributes, Session, User } from 'lucia';
+import type {
+	RegisteredDatabaseSessionAttributes,
+	RegisteredDatabaseUserAttributes,
+	Session,
+	User
+} from 'lucia';
 
 const luciaHandle: Handle = async ({ event, resolve }) => {
 	const sessionId = event.cookies.get(auth.sessionCookieName);

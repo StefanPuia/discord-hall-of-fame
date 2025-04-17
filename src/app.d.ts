@@ -32,7 +32,6 @@ declare module 'lucia' {
 	}
 }
 
-
 interface DatabaseUserAttributes {
 	discordId: string;
 }

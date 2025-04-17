@@ -84,7 +84,7 @@ export const deleteMessage = async (channelId: string, messageId: string) => {
 
 const mapMessage = (message: Message): HofMessage => {
 	const { title, date } =
-	message?.content.match(/\*\*(?<title>.+?)\*\*\n\*(?<date>.+?)\*/)?.groups ?? {};
+		message?.content.match(/\*\*(?<title>.+?)\*\*\n\*(?<date>.+?)\*/)?.groups ?? {};
 	return {
 		discordId: message.id,
 		title,

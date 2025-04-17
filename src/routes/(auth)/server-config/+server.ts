@@ -13,7 +13,7 @@ export async function POST(event: RequestEvent) {
 	const channelId = data.get('channelId');
 
 	if (serverId && channelId) {
-		if (!event.locals.session?.guilds.find(g => g.id === serverId)) {
+		if (!event.locals.session?.guilds.find((g) => g.id === serverId)) {
 			return error(403, 'Cannot configure server with that id');
 		}
 		await Server.insertOne({

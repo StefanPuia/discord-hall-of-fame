@@ -16,7 +16,6 @@ export const load: PageServerLoad = async ({ params: { serverId, postId } }) => 
 
 export const actions: Actions = {
 	save: async ({ params: { postId, serverId }, request }) => {
-
 		const formData = await request.formData();
 		const existing = await correlate(await getGuildChannel(serverId), postId);
 		const image = formData.get('image') as File;
@@ -48,7 +47,6 @@ export const actions: Actions = {
 	},
 
 	post: async ({ params: { postId, serverId } }) => {
-
 		const channelId = await getGuildChannel(serverId);
 		const existing = await correlate(await getGuildChannel(serverId), postId);
 		const imageBuffer = await (await fetch(existing.imageURL)).arrayBuffer();

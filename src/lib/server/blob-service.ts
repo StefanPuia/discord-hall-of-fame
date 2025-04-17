@@ -1,5 +1,9 @@
 import { env } from '$env/dynamic/private';
-import { BlobSASPermissions, BlobServiceClient, StorageSharedKeyCredential } from '@azure/storage-blob';
+import {
+	BlobSASPermissions,
+	BlobServiceClient,
+	StorageSharedKeyCredential
+} from '@azure/storage-blob';
 import * as crypto from 'crypto';
 import { dev } from '$app/environment';
 
@@ -21,7 +25,11 @@ const createContainerClient = () => {
 	}
 };
 
-export const uploadHofImage = async (channelId: string, messageId: string, image: ArrayBufferLike) => {
+export const uploadHofImage = async (
+	channelId: string,
+	messageId: string,
+	image: ArrayBufferLike
+) => {
 	const containerClient = createContainerClient();
 	const blobName = `${channelId}/${messageId}-${crypto.randomUUID()}.jpg`;
 	await containerClient.getBlockBlobClient(blobName).uploadData(Buffer.from(image));

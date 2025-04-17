@@ -32,7 +32,6 @@ export interface SessionDoc {
 	guilds: DiscordGuild[];
 }
 
-
 class Database {
 	private static instance: MongoClient;
 
@@ -57,14 +56,17 @@ export const Server = Database.get().collection('servers') as Collection<ServerD
 export const Post = Database.get().collection('posts') as Collection<PostDoc>;
 export const Session = Database.get().collection('sessions') as Collection<SessionDoc>;
 
-
 export const getServer = (discordId: string) => Server.findOne({ discordId });
 export const getPostByDiscordId = (discordId: string) => Post.findOne({ discordId });
-export const getPostsByChannel = (channelId: string) => Post.find({
-	channel: channelId, deleted: { $exists: false }
-});
-export const createPost = (post: Omit<PostDoc, '_id'>) => Post.insertOne({
-	...post,
-	_id: generateIdFromEntropySize(10)
-});
-export const deletePost = (discordId: string) => Post.updateOne({ discordId }, { $set: { deleted: new Date().toISOString() } });
+export const getPostsByChannel = (channelId: string) =>
+	Post.find({
+		channel: channelId,
+		deleted: { $exists: false }
+	});
+export const createPost = (post: Omit<PostDoc, '_id'>) =>
+	Post.insertOne({
+		...post,
+		_id: generateIdFromEntropySize(10)
+	});
+export const deletePost = (discordId: string) =>
+	Post.updateOne({ discordId }, { $set: { deleted: new Date().toISOString() } });

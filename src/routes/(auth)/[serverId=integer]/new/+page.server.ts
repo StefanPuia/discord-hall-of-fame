@@ -7,7 +7,6 @@ import { backupMessage } from '$lib/server/backup';
 
 export const actions: Actions = {
 	create: async ({ params: { serverId }, request }) => {
-
 		const formData = await request.formData();
 		const image = formData.get('image') as File;
 		const imageBuffer = image.size ? await image.arrayBuffer() : undefined;

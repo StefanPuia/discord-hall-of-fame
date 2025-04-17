@@ -1,4 +1,7 @@
-import { getMessage as getDiscordMessage, getMessages as getDiscordMessages } from '$lib/server/discord-bot';
+import {
+	getMessage as getDiscordMessage,
+	getMessages as getDiscordMessages
+} from '$lib/server/discord-bot';
 import { getMessage as getDbMessage, getMessages as getDbMessages } from '$lib/server/repository';
 import type { HofMessage } from '$lib/types';
 import { error } from '@sveltejs/kit';

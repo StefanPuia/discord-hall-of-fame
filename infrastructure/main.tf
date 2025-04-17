@@ -68,18 +68,9 @@ resource "azurerm_static_web_app" "site" {
     MONGODB_DATABASE : azurerm_cosmosdb_mongo_database.hof_prod.name
     BLOB_STORAGE_ACCOUNT : azurerm_storage_account.storage.name
     BLOB_STORAGE_KEY : azurerm_storage_account.storage.primary_access_key
-    DISCORD_CLIENT_ID : data.azurerm_key_vault_secret.discord_client_id
-    DISCORD_CLIENT_SECRET : data.azurerm_key_vault_secret.discord_client_secret
-    DISCORD_BOT_ID : data.azurerm_key_vault_secret.discord_bot_id
-    DISCORD_BOT_TOKEN : data.azurerm_key_vault_secret.discord_bot_token
+    DISCORD_CLIENT_ID : data.azurerm_key_vault_secret.discord_client_id.value
+    DISCORD_CLIENT_SECRET : data.azurerm_key_vault_secret.discord_client_secret.value
+    DISCORD_BOT_ID : data.azurerm_key_vault_secret.discord_bot_id.value
+    DISCORD_BOT_TOKEN : data.azurerm_key_vault_secret.discord_bot_token.value
   }
-}
-
-resource "azurerm_container_app_environment_storage" "config" {
-  name                         = "discord-hof-dab-config"
-  account_name                 = azurerm_storage_account.storage.name
-  share_name                   = azurerm_storage_share.config.name
-  access_key                   = azurerm_storage_account.storage.primary_access_key
-  access_mode                  = "ReadOnly"
-  container_app_environment_id = local.container_env_id
 }

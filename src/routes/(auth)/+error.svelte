@@ -20,7 +20,7 @@
 {/if}
 
 <style>
-    .configure {
-        padding-top: 2em;
-    }
+	.configure {
+		padding-top: 2em;
+	}
 </style>

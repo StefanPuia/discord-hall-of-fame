@@ -23,7 +23,6 @@ const getUser = async (discordUser: DiscordUser): Promise<UserDoc> => {
 	return existingUser;
 };
 
-
 export async function GET(event: RequestEvent): Promise<Response> {
 	const code = event.url.searchParams.get('code');
 	const state = event.url.searchParams.get('state');
@@ -41,9 +40,7 @@ export async function GET(event: RequestEvent): Promise<Response> {
 		const discordUser = (await rest.get(Routes.user())) as DiscordUser;
 		const guilds = (await rest.get(Routes.userGuilds())) as DiscordGuild[];
 		const botGuilds = await getBotGuilds();
-		const commonGuilds = guilds
-			.filter(isAdministrator)
-			.filter(isBotAlsoInGuild(botGuilds));
+		const commonGuilds = guilds.filter(isAdministrator).filter(isBotAlsoInGuild(botGuilds));
 
 		const user = await getUser(discordUser);
 

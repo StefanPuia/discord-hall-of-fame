@@ -5,6 +5,12 @@ resource "azurerm_cosmosdb_account" "account" {
   resource_group_name = azurerm_resource_group.rg.name
   kind                = "MongoDB"
 
+  is_virtual_network_filter_enabled = true
+
+  virtual_network_rule {
+    id = local.host_snet_id
+  }
+
   capabilities {
     name = "EnableServerless"
   }

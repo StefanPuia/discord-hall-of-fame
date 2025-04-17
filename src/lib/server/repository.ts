@@ -1,5 +1,10 @@
 import { error } from '@sveltejs/kit';
-import { getPostByDiscordId, getPostsByChannel, getServer, type PostDoc } from '$lib/server/database';
+import {
+	getPostByDiscordId,
+	getPostsByChannel,
+	getServer,
+	type PostDoc
+} from '$lib/server/database';
 
 export const getGuildChannel = async (guildId: string) => {
 	const channel = await getServer(guildId);
