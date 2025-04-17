@@ -96,7 +96,7 @@ stages:
                           -p $(dockerContainerPort):8080 \
                           -e PORT \
                           -e BASE_URL \
-                          -e MONGODB_CONN_URL \
+                          -e MONGODB_CONNECTION_STRING \
                           -e MONGODB_DATABASE \
                           -e DISCORD_CLIENT_ID \
                           -e DISCORD_CLIENT_SECRET \
@@ -109,7 +109,7 @@ stages:
                       env:
                         PORT: 8080
                         BASE_URL: $(appBaseUrl)
-                        MONGODB_CONN_URL: $(database-url)
+                        MONGODB_CONNECTION_STRING: $(db-connection-string)
                         MONGODB_DATABASE: $(database-name)
                         DISCORD_CLIENT_ID: $(discord-client-id)
                         DISCORD_CLIENT_SECRET: $(discord-client-secret)

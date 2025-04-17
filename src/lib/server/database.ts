@@ -35,16 +35,16 @@ export interface SessionDoc {
 class Database {
 	private static instance: MongoClient;
 
-	private static getDbUrl() {
+	private static getConnectionString() {
 		if (building) {
 			return 'mongodb://root:root@localhost:27017/';
 		}
-		return env.MONGODB_CONN_URL!;
+		return env.MONGODB_CONNECTION_STRING!;
 	}
 
 	public static get() {
 		if (!Database.instance) {
-			Database.instance = new MongoClient(Database.getDbUrl());
+			Database.instance = new MongoClient(Database.getConnectionString());
 			Database.instance.connect().catch(console.error);
 		}
 		return Database.instance.db(env.MONGODB_DATABASE);
