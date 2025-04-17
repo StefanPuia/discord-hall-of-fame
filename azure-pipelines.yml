@@ -33,26 +33,27 @@ stages:
               repository: $(dockerRegistry)/$(dockerImage)
               tags: $(dockerImageVersion)
 
-          - task: Docker@2
-            displayName: Login to ACR
-            inputs:
-              command: login
-              containerRegistry: $(dockerRegistryServiceConnection)
+          - ${{ if eq(variables.isMain, true) }}:
+              - task: Docker@2
+                displayName: Login to ACR
+                inputs:
+                  command: login
+                  containerRegistry: $(dockerRegistryServiceConnection)
 
-          - task: Docker@2
-            displayName: Push image
-            inputs:
-              command: push
-              containerRegistry: $(dockerRegistryServiceConnection)
-              repository: $(dockerImage)
-              tags: $(dockerImageVersion)
+              - task: Docker@2
+                displayName: Push image
+                inputs:
+                  command: push
+                  containerRegistry: $(dockerRegistryServiceConnection)
+                  repository: $(dockerImage)
+                  tags: $(dockerImageVersion)
 
-          - task: Docker@2
-            displayName: Docker Logout
-            inputs:
-              command: logout
-              containerRegistry: $(dockerRegistryServiceConnection)
-            condition: always()
+              - task: Docker@2
+                displayName: Docker Logout
+                inputs:
+                  command: logout
+                  containerRegistry: $(dockerRegistryServiceConnection)
+                condition: always()
 
   - ${{ if eq(variables.isMain, true) }}:
       - stage: deployProd
