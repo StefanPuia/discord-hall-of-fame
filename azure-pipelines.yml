@@ -104,11 +104,13 @@ stages:
                           -e DISCORD_BOT_TOKEN \
                           -e BLOB_STORAGE_ACCOUNT \
                           -e BLOB_STORAGE_KEY \
+                          -e BODY_SIZE_LIMIT \
                           $(dockerRegistry)/$(dockerImage):$(dockerImageVersion)
                       displayName: Start container
                       env:
                         PORT: 8080
                         BASE_URL: $(appBaseUrl)
+                        BODY_SIZE_LIMIT: Infinity
                         MONGODB_CONNECTION_STRING: $(db-connection-string)
                         MONGODB_DATABASE: $(database-name)
                         DISCORD_CLIENT_ID: $(discord-client-id)
