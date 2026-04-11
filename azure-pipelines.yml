@@ -7,7 +7,7 @@ variables:
   dockerRegistry: stefanpuia.azurecr.io
   dockerImage: discord-hof
   dockerImageVersion: $(Build.BuildNumber)
-  dockerRegistryServiceConnection: azureContainerRegistry-discord-hall-of-fame
+  dockerRegistryServiceConnection: azureContainerRegistry2-discord-hall-of-fame
   dockerContainerName: discord-hof
   dockerContainerPort: 38142
 
