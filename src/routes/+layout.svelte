@@ -1,20 +1,13 @@
 <script lang="ts">
-	import { SvelteUIProvider } from '@svelteuidev/core';
-	import App from '$lib/components/App/App.svelte';
+	import '../app.css';
+	import HeadContent from '$lib/components/App/_HeadContent.svelte';
 </script>
 
 <svelte:head>
 	<title>Hall of Fame</title>
 </svelte:head>
 
-<SvelteUIProvider themeObserver="dark" withNormalizeCSS withGlobalStyles>
-	<App>
-		<slot />
-	</App>
-</SvelteUIProvider>
-
-<style>
-	:global(a) {
-		text-decoration: none !important;
-	}
-</style>
+<HeadContent />
+<div class="container max-w-5xl place-self-center p-8">
+	<slot />
+</div>

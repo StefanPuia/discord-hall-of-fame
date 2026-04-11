@@ -1,43 +1,32 @@
 <script lang="ts">
+	import { Button, Navbar, NavBrand } from 'flowbite-svelte';
 	import Logo from './_Logo.svelte';
-	import { Anchor, Burger, Button, Group, Text } from '@svelteuidev/core';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import GuildCard from '$lib/components/Guild/GuildCard.svelte';
 	import type { DiscordGuild } from '$lib/types';
 
-	export let opened: boolean;
-	export let toggleOpen: () => void;
-
-	let guild: DiscordGuild | null | undefined;
-
-	$: {
-		let serverId = $page.params.serverId;
-		guild = $page.data.guilds?.find((g) => g.id === `${serverId}`);
-	}
+	let serverId = $derived(page.params.serverId);
+	let guild: DiscordGuild | undefined = $derived(
+		(page.data.guilds as DiscordGuild[] | undefined)?.find((g) => g.id === `${serverId}`)
+	);
 </script>
 
-<Group override={{ height: '100%', px: 20 }} position="apart">
-	<Burger {opened} on:click={toggleOpen} override={{ d: 'block', '@sm': { d: 'none' } }} />
-	<Anchor
-		underline={false}
-		href="/"
-		override={{ '&:hover': { textDecoration: 'none !important' } }}
-	>
-		<Group>
-			<Logo size={35} />
-			<Text color="blue" size="xl" override={{ d: 'none', '@sm': { d: 'block' } }}>
-				Hall of Fame
-			</Text>
-			{#if guild}
-				<GuildCard {guild} />
-			{/if}
-		</Group>
-	</Anchor>
-	{#if $page.data.guilds !== undefined}
-		<Group>
+<!--suppress JSUnusedGlobalSymbols -->
+<Navbar fluid class="border-b border-b-neutral-500">
+	<NavBrand href="/" class="flex items-center gap-2">
+		<Logo size={36} />
+		<span class="self-center text-xl font-semibold whitespace-nowrap hidden sm:block"
+			>Hall of Fame</span
+		>
+	</NavBrand>
+	{#if page.data.guilds !== undefined}
+		{#if guild}
+			<GuildCard {guild} />
+		{/if}
+		<div class="flex md:order-2">
 			<form method="post" action="/logout">
 				<Button type="submit">Sign out</Button>
 			</form>
-		</Group>
+		</div>
 	{/if}
-</Group>
+</Navbar>

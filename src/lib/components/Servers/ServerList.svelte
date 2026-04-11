@@ -1,21 +1,20 @@
 <script lang="ts">
-	import { Grid, Text } from '@svelteuidev/core';
 	import GuildCard from '$lib/components/Guild/GuildCard.svelte';
 	import type { DiscordGuild } from '$lib/types';
 
-	export let guilds: DiscordGuild[] = [];
+	let { guilds }: { guilds: DiscordGuild[] } = $props();
 </script>
 
 {#if guilds.length}
-	<Text size="xl" mb="xl">Choose which server to manage:</Text>
+	<div class="mb-4 text-lg">Choose which server to manage:</div>
 
-	<Grid>
-		{#each guilds ?? [] as guild}
-			<Grid.Col span={3}>
-				<GuildCard {guild} />
-			</Grid.Col>
+	<div class="flex flex-row gap-x-8 gap-y-4 flex-wrap">
+		{#each guilds ?? [] as guild (guild.id)}
+			<GuildCard {guild} />
 		{/each}
-	</Grid>
+	</div>
 {:else}
-	No servers available. You must be an administrator of a server that the bot is also in.
+	<div class="mb-4 text-lg">
+		No servers available. You must be an administrator of a server that the bot is also in.
+	</div>
 {/if}

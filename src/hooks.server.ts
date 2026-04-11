@@ -1,4 +1,3 @@
-import { prepareStylesSSR } from '@svelteuidev/core';
 import { sequence } from '@sveltejs/kit/hooks';
 import type { Handle } from '@sveltejs/kit';
 import { auth } from '$lib/server/lucia';
@@ -40,4 +39,4 @@ const luciaHandle: Handle = async ({ event, resolve }) => {
 	return resolve(event);
 };
 
-export const handle = sequence(luciaHandle, prepareStylesSSR);
+export const handle = sequence(luciaHandle);

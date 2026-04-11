@@ -1,28 +1,23 @@
 <script lang="ts">
-	import { Anchor, Image } from '@svelteuidev/core';
+	import { Avatar } from 'flowbite-svelte';
 	import type { DiscordGuild } from '$lib/types';
+	import { resolve } from '$app/paths';
 
-	export let guild: DiscordGuild | undefined;
+	let { guild }: { guild: DiscordGuild | undefined } = $props();
 </script>
 
 {#if guild}
-	<div class="guild">
-		<Image
-			radius="xl"
-			src="https://cdn.discordapp.com/icons/{guild.id}/{guild.icon}.webp"
-			alt="Icon"
-			width={32}
-			height={32}
-		/>
-		<Anchor href={`/${guild.id}`}>{guild.name}</Anchor>
-	</div>
+	<a href={resolve(`/${guild.id}`)}>
+		<div class="flex items-center space-x-4">
+			<Avatar
+				src="https://cdn.discordapp.com/icons/{guild.id}/{guild.icon}.webp"
+				size="sm"
+				cornerStyle="rounded"
+				alt="{guild.name} guild avatar"
+			/>
+			<div class="space-y-1">
+				<div>{guild.name}</div>
+			</div>
+		</div>
+	</a>
 {/if}
-
-<style>
-	.guild {
-		display: flex;
-		flex-wrap: nowrap;
-		align-items: center;
-		gap: 0.5rem;
-	}
-</style>

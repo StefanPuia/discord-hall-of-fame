@@ -73,5 +73,7 @@ export const createPost = (post: NewPostDoc) =>
 		_id: generateIdFromEntropySize(10),
 		created: new Date().toISOString()
 	});
+export const updatePost = (discordId: string, post: Partial<NewPostDoc>) =>
+	Post.updateOne({ discordId }, { $set: post });
 export const deletePost = (discordId: string) =>
 	Post.updateOne({ discordId }, { $set: { deleted: new Date().toISOString() } });

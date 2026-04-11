@@ -5,7 +5,8 @@ import { deleteMessage, postMessage, updateMessage } from '$lib/server/discord-b
 import dayjs from 'dayjs';
 import { redirect } from '@sveltejs/kit';
 import { backupMessage } from '$lib/server/backup';
-import { createPost, deletePost } from '$lib/server/database';
+import { createPost, deletePost, updatePost } from '$lib/server/database';
+import { uploadHofImage } from '$lib/server/blob-service';
 
 export const load: PageServerLoad = async ({ params: { serverId, postId } }) => {
 	const guildChannel = await getGuildChannel(serverId);
@@ -21,17 +22,29 @@ export const actions: Actions = {
 		const image = formData.get('image') as File;
 		const imageBuffer = image.size ? await image.arrayBuffer() : undefined;
 
-		await updateMessage(
-			await getGuildChannel(serverId),
-			postId,
-			{
-				title: (formData.get('title') as string) || existing.title,
-				date: dayjs(formData.get('date') as string).toDate() || existing.date,
-				imageURL: existing.imageURL,
-				discordId: postId
-			},
-			imageBuffer
-		);
+		const message = {
+			title: (formData.get('title') as string) || existing.title,
+			date: dayjs(formData.get('date') as string).toDate() || existing.date,
+			imageURL: existing.imageURL,
+			discordId: postId
+		};
+
+		await updateMessage(await getGuildChannel(serverId), postId, message, imageBuffer);
+
+		let blobImage = existing.blobImage;
+		if (imageBuffer) {
+			blobImage = await uploadHofImage(
+				await getGuildChannel(serverId),
+				message.discordId,
+				imageBuffer
+			);
+		}
+		await updatePost(existing.discordId, {
+			...existing,
+			...message,
+			file: blobImage,
+			date: message.date.toISOString()
+		});
 
 		return redirect(302, `/${serverId}/${postId}`);
 	},

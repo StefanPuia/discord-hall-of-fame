@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { Anchor, Box } from '@svelteuidev/core';
+	import { Button, Heading } from 'flowbite-svelte';
+	import { resolve } from '$app/paths';
 </script>
 
-<h1>Sign in</h1>
-<Box mt="md">
-	<Anchor href="/login/discord">Sign in with Discord</Anchor>
-</Box>
+<Heading tag="h2">Sign in</Heading>
+<div class="mt-4">
+	<Button color="purple" href={resolve('/login/discord')}>Sign in with Discord</Button>
+</div>

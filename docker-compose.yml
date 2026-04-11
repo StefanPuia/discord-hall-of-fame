@@ -19,6 +19,13 @@ services:
       test: nc 127.0.0.1 10000 -z
       interval: 1s
       retries: 30
+    command:
+      - 'azurite'
+      - '--skipApiVersionCheck'
+      - '--blobHost'
+      - '0.0.0.0'
+      - '-l'
+      - '/data'
 
   azurite_init:
     image: mcr.microsoft.com/azure-cli:latest

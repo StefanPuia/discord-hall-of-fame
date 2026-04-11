@@ -1,21 +1,26 @@
 <script lang="ts">
-	import HallOfFameGrid from '$lib/components/HallOfFame/HallOfFameGrid.svelte';
-	import type { PageData } from './$types';
-	import { Grid } from '@svelteuidev/core';
 	import SkeletonCard from '$lib/components/HallOfFame/SkeletonCard.svelte';
+	import type { HofMessage } from '$lib/types';
+	import { resolve } from '$app/paths';
+	import NewMessageCard from '$lib/components/HallOfFame/NewMessageCard.svelte';
+	import MessageCard from '$lib/components/HallOfFame/MessageCard.svelte';
 
-	export let data: PageData;
+	export let data: { messages: Promise<HofMessage[]>; serverId: string };
 </script>
 
-{#await data.messages}
-	<Grid spacing={20}>
-		<!-- eslint-disable-next-line @typescript-eslint/no-unused-vars-->
-		{#each { length: 5 } as _}
-			<Grid.Col span={4}>
-				<SkeletonCard />
-			</Grid.Col>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+	{#await data.messages}
+		{#each { length: 5 } as _, i (i)}
+			<SkeletonCard />
 		{/each}
-	</Grid>
-{:then messages}
-	<HallOfFameGrid serverId={data.serverId} {messages} />
-{/await}
+	{:then messages}
+		<a href={resolve(`/${data.serverId}/new`)}>
+			<NewMessageCard />
+		</a>
+		{#each messages as message (message.discordId)}
+			<a href={resolve(`/${data.serverId}/${message.discordId}`)}>
+				<MessageCard {message} />
+			</a>
+		{/each}
+	{/await}
+</div>
